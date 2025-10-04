@@ -21,3 +21,12 @@ Daftar Modul:
 6. Details
 7. Comment Section
 
+Initial Dataset:
+1. WIkipedia.com
+2. Olympics.com
+3. nbcOlympics.com
+
+Roles:
+1.  Admin
+2.  User
+   
