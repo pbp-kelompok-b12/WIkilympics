@@ -22,7 +22,7 @@ Target Pengguna:
 - Penggemar olahraga yang ingin membaca berita dan berinteraksi di forum komunitas.
 
 ## Daftar Modul
-1. Sports (Saffan Firsta Aqila)
+1. Sports (Saffana Firsta Aqila)
   - Target Pengguna
     1. Admin: Menambahkan, mengedit, dan menghapus data cabang olahraga olimpiade.
     2. User: Melihat daftar cabang olahraga olimpiade.
@@ -56,8 +56,15 @@ Target Pengguna:
     2. Admin: Dapat menghapus ulasan user manapun
   - Atribut: Nama/id komentator, konten komentar, tombol like
   - Deskripsi: Modul Forum and Review Pages berfungsi sebagai ruang interaksi antar pengguna untuk berbagi pendapat dan pengalaman seputar olahraga olimpiade. Pengguna dapat menulis ulasan serta pengguna lainnya dapat menyatakan apresiasi melalui fitur like.
-    
-6. User Profile
+
+6. Landing Page x Polling (Qoriana Syahwa Maharani)
+   - Target Pengguna
+     1. Admin: Membuat polling questions yang bisa dijawab oleh semua pengguna
+     2. User: Menjawab polling dengan klik pilihan jawaban.
+   - Atribut: Pertanyaan, option1, jumlah vote option 1, option2, jumlah vote option 2
+   - Deskripsi: Modul yang dirancang untuk meningkatkan keterlibatan pengguna langsung di landing page. Modul polling ini menampilkan pertanyaan yang terkait dengan olahraga, dengan berbagai pilihan jawaban. Pengguna dapat memberikan suara dengan satu kali klik.
+        
+7. User Profile (Opsional)
   - Target Pengguna
     1. User: Melihat dan mengelola profil pribadi di dalam platform.
   - Atribut: Nama user, foto profil, biodata, tanggal lahir, media sosial (Instagram, X).
