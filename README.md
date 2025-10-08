@@ -22,39 +22,40 @@ Target Pengguna:
 - Penggemar olahraga yang ingin membaca berita dan berinteraksi di forum komunitas.
 
 ## Daftar Modul
-1. Sports
+1. Sports (Saffan Firsta Aqila)
   - Target Pengguna
     1. Admin: Menambahkan, mengedit, dan menghapus data cabang olahraga olimpiade.
     2. User: Melihat daftar cabang olahraga olimpiade.
   - Atribut: Nama olahraga, negara asal, tahun pertama, deskripsi sejarah, deskripsi olahraga, perlengkapan (equipment).
   - Deskripsi: Modul Sports menampilkan daftar cabang olahraga olimpiade beserta informasi detailnya. Admin dapat menambah, mengedit, atau menghapus data untuk memastikan informasi tetap akurat dan terbarui. Pengguna dapat menjelajahi berbagai olahraga untuk mempelajari latar belakang dan karakteristik tiap cabang secara informatif.
     
-2. Athletes
+2. Athletes (Muhammad Iffan Chalif Aziz)
   - Target Pengguna
     1. Admin: Menambahkan, mengedit, dan menghapus data atlet.
     2. User: Melihat daftar atlet.
   - Atribut: Nama atlet, foto, asal negara, cabang olahraga, biografi.
   - Deskripsi: Modul Athletes menampilkan daftar atlet olimpiade dari berbagai negara beserta informasi pribadinya. Admin dapat menambahkan, mengedit, dan menghapus data atlet agar profil yang ditampilkan tetap akurat dan terkini. Pengguna dapat melihat profil setiap atlet untuk mendapatkan gambaran perjalanan karier mereka.
 
-3. Upcoming Event
+3. Upcoming Event (Naira Ammara Putri)
   - Target Pengguna
     1. Admin: Menambahkan, mengedit, dan menghapus data event olahraga yang akan datang.
     2. User: Melihat daftar event olahraga olimpiade yang akan datang beserta detail informasinya.
   - Atribut: Nama event/penyelenggara, tanggal pelaksanaan, lokasi pelaksanaan, cabang olahraga yang dipertandingkan, foto.
   - Deskripsi: Modul Upcoming Event menampilkan daftar acara olahraga olimpiade yang akan diselenggarakan, lengkap dengan detail informasinya. Admin bertanggung jawab memperbarui dan memastikan data event selalu akurat dan terkini. Pengguna dapat melihat jadwal dan informasi setiap event untuk mengetahui perkembangan serta waktu pelaksanaan kompetisi olimpiade berikutnya.
 
-4. News/Articles
+4. News/Articles (Vanessa)
   - Target Pengguna
     1. Admin: Menambahkan, mengedit, dan menghapus berita atau artikel terkait olahraga olimpiade.
     2. User: Membaca daftar berita dan memberikan vote (up atau down).
   - Atribut: Judul berita, deskripsi, kategori olahraga, tanggal dibuat, tombol up vote dan down vote, foto.
   - Deskripsi: Modul News/Articles menyajikan berbagai berita dan artikel terkini seputar dunia olahraga olimpiade. Admin dapat mengelola konten agar selalu relevan, informatif, dan terstruktur berdasarkan kategori olahraga. Pengguna dapat membaca berita dan memberikan tanggapan melalui sistem voting.
    
-5. Forum and Review Pages
+5. Forum and Review Pages (Razan Muhammad Salim)
   - Target Pengguna
-    1. User: Memberikan ulasan dan berinteraksi dengan pengguna lain dalam forum.
+    1. User: Memberikan(menambahkan), mengedit, dan menghapus ulasannya sendiri, serta berinteraksi dengan pengguna lain dalam forum menggunakan like.
+    2. Admin: Dapat menghapus ulasan user manapun
   - Atribut: Nama/id komentator, konten komentar, tombol like
-  - Deskripsi: Modul Forum and Review Pages berfungsi sebagai ruang interaksi antar pengguna untuk berbagi pendapat dan pengalaman seputar olahraga olimpiade. Pengguna dapat menulis ulasan serta menyatakan apresiasi melalui fitur like.
+  - Deskripsi: Modul Forum and Review Pages berfungsi sebagai ruang interaksi antar pengguna untuk berbagi pendapat dan pengalaman seputar olahraga olimpiade. Pengguna dapat menulis ulasan serta pengguna lainnya dapat menyatakan apresiasi melalui fitur like.
     
 6. User Profile
   - Target Pengguna
