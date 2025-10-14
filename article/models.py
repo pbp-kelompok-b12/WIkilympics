@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 class Article(models.Model):
     CATEGORY_CHOICES = [
         ('athletics', 'Athletics'),
+        ('swimming', 'Swimming'),
+        ('a', 'A')
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -24,10 +26,11 @@ class Article(models.Model):
     
     @property
     def is_trending(self):
-        return self.like > 7
+        return self.like > 6
     
     def like_count(self):
         return self.like_user.count()
+    
     
     # # berapa jam/hari yang lalu
     # def hours_since_created(self):
