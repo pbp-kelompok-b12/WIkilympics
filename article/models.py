@@ -7,7 +7,8 @@ class Article(models.Model):
     CATEGORY_CHOICES = [
         ('athletics', 'Athletics'),
         ('swimming', 'Swimming'),
-        ('a', 'A')
+        ('b', 'B'),
+        ('a', 'A'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -28,11 +29,8 @@ class Article(models.Model):
     def is_trending(self):
         return self.like > 6
     
+    @property
     def like_count(self):
         return self.like_user.count()
-    
-    
-    # # berapa jam/hari yang lalu
-    # def hours_since_created(self):
-    #     hours = 
-    
+
+        
