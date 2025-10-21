@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<title>Login - Wikilympics</title>
+<title>Login - WIkilympics</title>
 {% endblock meta %}
 
 {% block content %}
-<div class="bg-gray-50 w-full min-h-screen flex items-center justify-center p-8">
+<div class="bg-gray-100 w-full min-h-screen flex items-center justify-center p-8">
   <div class="max-w-md w-full">
-    <div class="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 form-style">
+    <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 sm:p-10">
       <div class="text-center mb-8">
-        <h1 class="text-2xl font-bold text-blue-900 mb-2">Welcome Back</h1>
-        <p class="text-gray-600">Sign in to continue your journey with <span class=""> </span></p>
+        <h1 class="text-3xl font-extrabold text-blue-900 mb-2">Welcome Back</h1>
+        <p class="text-gray-500">Sign in to continue your journey with <span class="text-green-600 font-semibold">WIkilympics</span></p>
       </div>
 
       <!-- Form Errors Display -->
       {% if form.non_field_errors %}
         <div class="mb-6">
           {% for error in form.non_field_errors %}
-            <div class="px-4 py-3 rounded-md text-sm border bg-red-50 border-red-200 text-red-700">
+            <div class="px-4 py-3 rounded-md text-sm border bg-yellow-50 border-yellow-200 text-yellow-800">
               {{ error }}
             </div>
           {% endfor %}
@@ -29,7 +29,7 @@
           {% for field, errors in form.errors.items %}
             {% if field != '__all__' %}
               {% for error in errors %}
-                <div class="px-4 py-3 rounded-md text-sm border bg-red-50 border-red-200 text-red-700 mb-2">
+                <div class="px-4 py-3 rounded-md text-sm border bg-yellow-50 border-yellow-200 text-yellow-800 mb-2">
                   <strong>{{ field|title }}:</strong> {{ error }}
                 </div>
               {% endfor %}
@@ -42,30 +42,30 @@
         {% csrf_token %}
         
         <div>
-          <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+          <label for="username" class="block text-sm font-medium text-blue-900 mb-2">Username</label>
           <input 
             id="username" 
             name="username" 
             type="text" 
             required 
-            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-900 transition-colors" 
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition" 
             placeholder="Enter your username">
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <label for="password" class="block text-sm font-medium text-blue-900 mb-2">Password</label>
           <input 
             id="password" 
             name="password" 
             type="password" 
             required 
-            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-900 transition-colors" 
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition" 
             placeholder="Enter your password">
         </div>
 
         <button 
           type="submit" 
-          class="w-full bg-blue-900 text-white font-medium py-3 px-4 rounded-md hover:bg-blue-800 transition-colors">
+          class="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-semibold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg">
           Sign In
         </button>
       </form>
@@ -78,9 +78,9 @@
               class="
                 px-4 py-3 rounded-md text-sm border
                 {% if message.tags == 'success' %}
-                  bg-blue-50 border-blue-200 text-blue-800
+                  bg-green-50 border-green-200 text-green-700
                 {% elif message.tags == 'error' %}
-                  bg-red-50 border-red-200 text-red-700
+                  bg-yellow-50 border-yellow-200 text-yellow-800
                 {% else %}
                   bg-gray-50 border-gray-200 text-gray-700
                 {% endif %}
@@ -91,10 +91,10 @@
         </div>
       {% endif %}
 
-      <div class="mt-6 text-center pt-6 border-t border-gray-200">
-        <p class="text-gray-500 text-sm">
+      <div class="mt-8 text-center pt-6 border-t border-gray-200">
+        <p class="text-gray-600 text-sm">
           Don't have an account? 
-          <a href="{% url 'main:register' %}" class="text-blue-900 hover:text-blue-800 font-medium">
+          <a href="{% url 'main:register_user' %}" class="text-green-600 hover:text-green-700 font-medium transition">
             Register Now
           </a>
         </p>

@@ -1,21 +1,98 @@
-<nav>
-  <h1>Wikilympics</h1>
-
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="{% url 'main:create_news' %}">Create News</a></li>
-  </ul>
-
-  {% if user.is_authenticated %}
-    <div>
-      <span>Welcome, {{ name|default:user.username }}</span>
-      <span>{{ npm|default:"Student" }} - {{ class|default:"Class" }}</span>
-      <a href="{% url 'main:logout' %}">Logout</a>
+<nav class="fixed top-0 left-0 w-full bg-white border-b border-gray-200 shadow-sm z-50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <h1 class="text-3xl font-extrabold text-[#1E3A8A] tracking-wide select-none" style="font-family: 'Orbitron', sans-serif;">
+            WIkilympics
+          </h1>
+        </div>
+  
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-12 text-[#1E3A8A]">
+          <a href="/" class="font-bold hover:text-[#1E40AF] transition-colors">Home</a>
+          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Athletes</a>
+          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Sports</a>
+          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Upcoming Events</a>
+          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Sports Article</a>
+          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Forum & Review Pages</a>
+        </div>
+  
+        <!-- Desktop User Section -->
+        <div class="hidden md:flex items-center space-x-6">
+          {% if user.is_authenticated %}
+            <div class="text-right">
+              <div class="text-sm font-medium text-[#1E3A8A]">{{ name|default:user.username }}</div>
+            </div>
+            <a href="{% url 'main:logout' %}" class="text-red-600 hover:text-red-700 font-medium transition-colors">
+              Logout
+            </a>
+          {% else %}
+            <a href="{% url 'main:login_user' %}" class="text-[#1E3A8A] hover:text-[#1E40AF] font-medium transition-colors">
+              Login
+            </a>
+            <a href="{% url 'main:register_user' %}" class="bg-[#1E3A8A] hover:bg-[#1E40AF] text-white px-4 py-2 rounded font-medium transition-colors">
+              Register
+            </a>
+          {% endif %}
+        </div>
+  
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden flex items-center">
+          <button class="mobile-menu-button p-2 text-[#1E3A8A] hover:text-[#1E40AF] transition-colors">
+            <span class="sr-only">Open menu</span>
+            <div class="w-6 h-6 flex flex-col justify-center items-center space-y-1">
+              <span class="bg-current block h-0.5 w-6 rounded-sm"></span>
+              <span class="bg-current block h-0.5 w-6 rounded-sm"></span>
+              <span class="bg-current block h-0.5 w-6 rounded-sm"></span>
+            </div>
+          </button>
+        </div>
+      </div>
     </div>
-  {% else %}
-    <div>
-      <a href="{% url 'main:login' %}">Login</a>
-      <a href="{% url 'main:register' %}">Register</a>
+  
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden md:hidden bg-white border-t border-gray-200">
+      <div class="px-6 py-4 space-y-4 text-[#1E3A8A]">
+        <div class="space-y-1">
+          <a href="/" class="block font-bold py-3 hover:text-[#1E40AF] transition-colors">Home</a>
+          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Athletes</a>
+          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports</a>
+          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Upcoming Events</a>
+          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports Article</a>
+          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Forum & Review Pages</a>
+        </div>
+  
+        <div class="border-t border-gray-200 pt-4">
+          {% if user.is_authenticated %}
+            <div class="mb-4">
+              <div class="font-medium text-[#1E3A8A]">{{ name|default:user.username }}</div>
+            </div>
+            <a href="{% url 'main:logout' %}" class="block text-red-600 hover:text-red-700 font-medium py-3 transition-colors">
+              Logout
+            </a>
+          {% else %}
+            <div class="space-y-3">
+              <a href="{% url 'main:login_user' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Login</a>
+              <a href="{% url 'main:register_user' %}" class="block bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-medium py-3 px-4 rounded text-center transition-colors">
+                Register
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
     </div>
-  {% endif %}
-</nav>
+  
+    <script>
+      const btn = document.querySelector("button.mobile-menu-button");
+      const menu = document.querySelector(".mobile-menu");
+      btn.addEventListener("click", () => menu.classList.toggle("hidden"));
+    </script>
+  </nav>
+  
+  <!-- Tambahkan link font di dalam <head> -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
+  
+# TODO
+# path ke masing-masing modul
+# user information (OPTIONAL)
