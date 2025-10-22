@@ -1,6 +1,16 @@
 import uuid
 from django.db import models
 
+class Thread(models.Model):
+    title = models.CharField(max_length = 200)
+    created_at = models.DateTimeField (auto_now_add= True) #auto_now_add = sets the date and time when an instance is made or something note: check again later
+    
+class Post(models.Model):
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField (auto_now_add= True)
+
+
 class News(models.Model):
     CATEGORY_CHOICES = [
         ('transfer', 'Transfer'),
