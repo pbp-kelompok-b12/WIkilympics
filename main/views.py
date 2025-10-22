@@ -9,31 +9,63 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy #url finder, defers until its actually needed, sidenote: might switch back to reverse
-from .models import Thread, Post
+from .models import *
+from .forms import *
 # Create your views here.
+from django.views.generic.edit import CreateView
+from .models import GeeksModel
 
-class ThreadListView(ListView):
-    model = Thread
+class GeeksCreate(CreateView):
 
-class ThreadDetailView(DetailView):
-    model = Thread
+    # specify the model for create view
+    model = GeeksModel
 
-class CreateThreadView(CreateView):
-    model = Thread
-    fields = ['title']
-    success_url = reverse_lazy('thread_list')
+    # specify the fields to be displayed
 
-class CreatePostView(CreateView):
-    model = Post
-    fields = ['content']
-    
-    def form_valid(self, form):
-        form.instance.thread_id = self.kwargs['pk']
-        return super().form_valid(form)
+    fields = ['title', 'description']
 
-    def get_success_url(self):
-        return reverse_lazy('thread_detail', kwargs = {'pk' : self.kwargs['pk']})
-    
+def home(request):
+    forums=forum.objects.all()
+    count=forums.count()
+    discussions=[]
+    for i in forums:
+        discussions.append(i.discussion_set.all())
+ 
+    context={'forums':forums,
+              'count':count,
+              'discussions':discussions}
+    return render(request,'home.html',context)
+ 
+def addInForum(request):
+    form = CreateInForum()
+    if request.method == 'POST':
+        form = CreateInForum(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    context ={'form':form}
+    return render(request,'addInForum.html',context)
+ 
+def addInDiscussion(request):
+    form = CreateInDiscussion()
+    if request.method == 'POST':
+        form = CreateInDiscussion(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    context ={'form':form}
+    return render(request,'addInDiscussion.html',context)
+ 
+ 
+# legacy functions
+def show_main(request):
+    context = {
+        'npm' : '240123456',
+        'name': 'Haru Urara',
+        'class': 'PBP A'
+    }
+
+    return render(request, "main.html", context)   
     
 def register(request):
     form = UserCreationForm()
