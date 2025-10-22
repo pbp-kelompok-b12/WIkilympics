@@ -1,28 +1,37 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from article.models import Article
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 # Create your views here.
-def article_list(request):
-    articles_list = Article.objects.all()
-    context = {'articles' : article_list}
-    return render(request, 'article_list.html', context)
+def show_articles(request):
+    return render(request, 'show_articles.html')
 
 def show_json(request):
-    article_list = Article.objects.all()
-    data = [
-        {
-            'id' : str(article.id),
-            'title' : article.title,
-            'content' : article.content,
+    article_list = Article.objects.all().order_by('-created')
+    data = []
+    for article in article_list:
+        is_liked = False
+        is_disliked = False
+        if request.user.is_authenticated:
+            is_liked = article.like_user.filter(id=request.user.id).exists()
+            is_disliked = article.dislike_user.filter(id=request.user.id).exists()
+
+        data.append({
+            'id': str(article.id),
+            'title': article.title,
+            'content': article.content,
             'category': article.category,
             'created': article.created.isoformat(),
             'thumbnail': article.thumbnail,
             'likes': article.like_count,
-        }
-        for article in article_list
-    ]
+          
+            'is_liked': is_liked,
+            'is_disliked': is_disliked,
+        })
     return JsonResponse(data, safe=False)   #data dalam list
 
 def show_json_id(request, article_id) :
@@ -38,6 +47,47 @@ def show_json_id(request, article_id) :
     }
     return JsonResponse(data)
 
+@csrf_exempt
+@require_POST
+def add_article(request):
+    title = request.POST.get("title")
+    content = request.POST.get("content")
+    category = request.POST.get("category")
+    thumbnail = request.POST.get("thumbnail")
+
+    new_article = Article(
+        title=title,
+        content=content,
+        category=category,
+        thumbnail=thumbnail,
+    )
+    new_article.save()
+    
+    return JsonResponse({'success':True})
+
+# @csrf_exempt
+@require_POST
+def edit_article(request, id):
+    article = get_object_or_404(Article, pk=id)
+    article.title = request.POST.get("title")
+    article.content = request.POST.get("content")
+    article.category = request.POST.get("category")
+    article.thumbnail = request.POST.get("thumbnail")
+    article.save()
+
+    return JsonResponse({'success':True})
+
+# @require_POST
+def delete_article(request, id):
+    article = get_object_or_404(Article, pk=id)
+    article.delete()
+    return JsonResponse({'success':True})
+
+def article_detail(request, id):
+    article = get_object_or_404(Article, pk=id)
+    context={'article':article}
+    return render(request, "article_detail.html", context)
+
 @login_required(login_url='main:login_user')
 def like_article(request, article_id):
     article = get_object_or_404(Article, pk=article_id)
@@ -49,7 +99,7 @@ def like_article(request, article_id):
         article.like_user.add(request.user)
     else:
         article.like_user.add(request.user)
-    return JsonResponse({'success': True, 'likes': article.like_count})
+    return JsonResponse({'success': True, 'likes': article.like_user.count()})
 
 @login_required(login_url='main:login_user')
 def dislike_article(request, article_id):

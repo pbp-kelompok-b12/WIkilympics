@@ -16,7 +16,7 @@ class Article(models.Model):
     content = models.TextField()
     category = models.CharField(choices=CATEGORY_CHOICES)
     created = models.DateTimeField(auto_now_add=True)
-    thumbnail = models.URLField(blank=True, null=True)
+    thumbnail = models.URLField(blank=False, null=False)
 
     # Mendetect user like dislike
     like_user = models.ManyToManyField(User, related_name="liked_articles", blank=True)
@@ -27,7 +27,7 @@ class Article(models.Model):
     
     @property
     def is_trending(self):
-        return self.like > 6
+        return self.like_user.count() > 6
     
     @property
     def like_count(self):
