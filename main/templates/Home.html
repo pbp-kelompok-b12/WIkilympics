@@ -31,24 +31,29 @@
                     <h5 class="card-title">
                         <h3>{{forum.topic}}</h3>
                         <div class="card-body container">
-                                <p>{{forum.description}}</p>
+                                <p>{{forum.description | truncatewords:25 }}</p>
                             </h5>
                             <hr>
-                            <p> By: {{forum.name}}</p>
-                            email- {{forum.email}}
+                            {% if forum.name == request.user %}
+                                <form method="POST" action="{% url 'main:delete_forum' forum.id %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-danger" style="width:fit-content; padding: 4px; margin:12px;">Delete Forum</button>
+                                </form>
+                            {% endif %}
+                            <p> By: <b>{{forum.name}}</b> </p>
                             <hr>     
                             <h4>Views from other users</h4>
                             {%for discuss in discussions%}
                             {%for objs in discuss%}  
                             {% if objs.forum == forum %}
-                               {{objs.discuss}}
+                               {{objs.discuss}}     --{{objs.username}}
                                <br>
                             {% endif %}
                             {%endfor%}
                             {%endfor%}
                             <form method="POST" action="{% url 'main:addInDiscussion' %}">
                                 {% csrf_token %}
-                            <button class="btn btn-success" style="width:fit-content; padding: 4px; margin:10px;">Add more</button>
+                            <button class="btn btn-success" style="width:fit-content; padding: 4px; margin:12px;">Reply</button>
                             </form>
                         </div>
                 </div>

@@ -3,10 +3,12 @@ from .models import *
  
 class CreateInForum(ModelForm):
     class Meta:
-        model= forum
+        model= Forum
         fields = "__all__"
+        exclude = ['name']
  
 class CreateInDiscussion(ModelForm):
     class Meta:
         model= Discussion
         fields = "__all__"
+        exclude = ['username']

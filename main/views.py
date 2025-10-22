@@ -2,30 +2,23 @@
 #https://docs.djangoproject.com/en/5.2/ref/class-based-views/generic-display/
 
 
-
+from django.views.decorators.http import require_POST
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import ListView, CreateView, DetailView
-from django.urls import reverse_lazy #url finder, defers until its actually needed, sidenote: might switch back to reverse
+from django.contrib.auth.decorators import login_required
+import datetime
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .models import *
 from .forms import *
 # Create your views here.
 from django.views.generic.edit import CreateView
-from .models import GeeksModel
 
-class GeeksCreate(CreateView):
-
-    # specify the model for create view
-    model = GeeksModel
-
-    # specify the fields to be displayed
-
-    fields = ['title', 'description']
-
+@login_required
 def home(request):
-    forums=forum.objects.all()
+    forums = Forum.objects.all()
     count=forums.count()
     discussions=[]
     for i in forums:
@@ -41,31 +34,52 @@ def addInForum(request):
     if request.method == 'POST':
         form = CreateInForum(request.POST)
         if form.is_valid():
-            form.save()
+            form_entry = form.save(commit=False)
+            form_entry.name = request.user
+            form_entry.save()
             return redirect('/')
     context ={'form':form}
     return render(request,'addInForum.html',context)
- 
+
+@login_required
 def addInDiscussion(request):
     form = CreateInDiscussion()
     if request.method == 'POST':
         form = CreateInDiscussion(request.POST)
         if form.is_valid():
-            form.save()
+            form_entry = form.save(commit=False)
+            form_entry.username = request.user
+            form_entry.save()
             return redirect('/')
     context ={'form':form}
     return render(request,'addInDiscussion.html',context)
  
  
 # legacy functions
+@login_required
 def show_main(request):
     context = {
-        'npm' : '240123456',
-        'name': 'Haru Urara',
-        'class': 'PBP A'
-    }
+    'npm': '240123456',
+    'name': request.user.username,
+    'class': 'PBP A',
+    'last_login': request.COOKIES.get('last_login', 'Never')
+}
 
     return render(request, "main.html", context)   
+
+@require_POST
+@login_required
+def delete_discussion(request, id):
+    discussion = get_object_or_404(Discussion, pk=id, name=request.user)
+    discussion.delete()
+    return redirect('main:home')
+
+@require_POST
+@login_required
+def delete_forum(request, id):
+    forum = get_object_or_404(Forum, pk=id,name=request.user )
+    forum.delete()
+    return redirect('main:home')
     
 def register(request):
     form = UserCreationForm()
@@ -84,9 +98,11 @@ def login_user(request):
       form = AuthenticationForm(data=request.POST)
 
       if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('main:show_main')
+        user = form.get_user()
+        login(request, user)
+        response = HttpResponseRedirect(reverse("main:show_main"))
+        response.set_cookie('last_login', str(datetime.datetime.now()))
+        return response
 
    else:
       form = AuthenticationForm(request)
@@ -95,4 +111,6 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('main:login')
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
