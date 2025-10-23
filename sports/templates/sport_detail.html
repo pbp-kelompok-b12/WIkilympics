@@ -1,1 +1,69 @@
-<h1>Sport Detail Here</h1>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>{{ sport.sport_name }} - Olympic Sport</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<!-- Hero Section -->
+<div class="relative w-full h-96">
+    {% if sport.sport_img %}
+        <img src="{{ sport.sport_img }}" alt="{{ sport.sport_name }}" class="w-full h-full object-cover">
+    {% else %}
+        <div class="w-full h-full bg-[#799AB3] flex items-center justify-center text-white text-3xl font-bold">
+            No Image Available
+        </div>
+    {% endif %}
+    <div class="absolute inset-0 bg-gradient-to-b from-[#0A192F]/70 to-[#31527A]/50 flex items-end p-6">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-[#E9F449] drop-shadow-lg">{{ sport.sport_name }}</h1>
+    </div>
+</div>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+
+    <!-- Back Button -->
+    <a href="{% url 'sports:show_main' %}" class="inline-block px-4 py-2 rounded-lg font-semibold text-white bg-[#31527A] hover:bg-[#0A192F] transition-colors shadow-md">
+        ← Back to Sports
+    </a>
+
+    <!-- Basic Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow">
+            <h2 class="text-2xl font-bold text-[#0A192F] mb-4">General Info</h2>
+            <ul class="space-y-2 text-gray-700">
+                <li><span class="font-semibold text-[#31527A]">Participation:</span> {{ sport.get_participation_structure_display }}</li>
+                <li><span class="font-semibold text-[#31527A]">Sport Type:</span> {{ sport.get_sport_type_display }}</li>
+                <li>
+                    <span class="font-semibold text-[#31527A]">Country of Origin:</span> {{ sport.country_of_origin }}
+                    {% if sport.country_flag_img %}
+                        <img src="{{ sport.country_flag_img }}" alt="{{ sport.country_of_origin }}" class="inline w-6 h-4 ml-1 rounded-sm shadow">
+                    {% endif %}
+                </li>
+                <li><span class="font-semibold text-[#31527A]">First Year Played:</span> {{ sport.first_year_played }}</li>
+            </ul>
+        </div>
+
+        <div class="bg-[#E9F449] rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow">
+            <h2 class="text-2xl font-bold text-[#0A192F] mb-4">Equipment</h2>
+            <p class="text-[#0A192F]">{{ sport.equipment }}</p>
+        </div>
+    </div>
+
+    <!-- Description / History -->
+    <div class="bg-[#4B7B49] text-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow">
+        <h2 class="text-2xl font-bold mb-4">History</h2>
+        <p class="leading-relaxed">{{ sport.history_description }}</p>
+    </div>
+
+    <!-- Extended Description -->
+    <div class="bg-[#799AB3] text-[#0A192F] rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow">
+        <h2 class="text-2xl font-bold mb-4">Detailed Description</h2>
+        <p class="leading-relaxed">{{ sport.sport_description }}</p>
+    </div>
+
+</div>
+
+{% endblock content %}
