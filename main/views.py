@@ -70,7 +70,7 @@ def show_main(request):
 @require_POST
 @login_required
 def delete_discussion(request, id):
-    discussion = get_object_or_404(Discussion, pk=id, name=request.user)
+    discussion = get_object_or_404(Discussion, pk=id, username=request.user)
     discussion.delete()
     return redirect('main:home')
 

@@ -16,6 +16,8 @@ class Discussion(models.Model):
     username = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
     forum = models.ForeignKey(Forum,blank=True,on_delete=models.CASCADE)
     discuss = models.CharField(max_length=1000)
+    date_created=models.DateTimeField(auto_now_add=True,null=True)
+
  
     def __str__(self):
         return str(self.forum)
