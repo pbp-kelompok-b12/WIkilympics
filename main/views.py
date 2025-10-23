@@ -16,6 +16,42 @@ from .forms import *
 # Create your views here.
 from django.views.generic.edit import CreateView
 
+
+@login_required
+def edit_forum(request, id):
+    forum = get_object_or_404(Forum, id=id)
+    
+    if forum.name != request.user and not request.user.is_superuser:
+        return redirect('main:home') 
+    
+    if request.method == 'POST':
+        form = CreateInForum(request.POST, instance=forum)
+        if form.is_valid():
+            form.save()
+            return redirect('main:home')
+    else:
+        form = CreateInForum(instance=forum)
+    
+    return render(request, 'editForum.html', {'form': form})
+
+
+@login_required
+def edit_discussion(request, id):
+    discussion = get_object_or_404(Discussion, id=id)
+    
+    if discussion.username != request.user and not request.user.is_superuser:
+        return redirect('main:home')  
+    
+    if request.method == 'POST':
+        form = CreateInDiscussion(request.POST, instance=discussion)
+        if form.is_valid():
+            form.save()
+            return redirect('main:home')
+    else:
+        form = CreateInDiscussion(instance=discussion)
+    
+    return render(request, 'editDiscussion.html', {'form': form})
+
 @login_required
 def home(request):
     forums = Forum.objects.all()

@@ -15,4 +15,6 @@ urlpatterns = [
     path('add-discussion/',addInDiscussion,name='addInDiscussion'),
     path('forum/delete/<int:id>/', delete_forum, name='delete_forum'),
     path('discussion/delete/<int:id>/', delete_discussion, name='delete_discussion'),
+    path('forum/edit/<int:id>/', edit_forum, name='edit_forum'),
+    path('discussion/edit/<int:id>/', edit_discussion, name='edit_discussion'),
 ]
