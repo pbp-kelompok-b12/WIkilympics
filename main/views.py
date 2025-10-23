@@ -25,14 +25,14 @@ def edit_forum(request, id):
         return redirect('main:home') 
     
     if request.method == 'POST':
-        form = CreateInForum(request.POST, instance=forum)
+        form = ForumForm(request.POST, instance=forum)
         if form.is_valid():
             form.save()
-            return redirect('main:home')
+            return redirect('main:home') 
     else:
-        form = CreateInForum(instance=forum)
+        form = ForumForm(instance=forum)
     
-    return render(request, 'editForum.html', {'form': form})
+    return render(request, 'editForum.html', {'form': form, 'forum': forum})
 
 
 
@@ -44,14 +44,14 @@ def edit_discussion(request, id):
         return redirect('main:home')  
     
     if request.method == 'POST':
-        form = CreateInDiscussion(request.POST, instance=discussion)
+        form = DiscussionForm(request.POST, instance=discussion)
         if form.is_valid():
             form.save()
             return redirect('main:home')
     else:
-        form = CreateInDiscussion(instance=discussion)
+        form = DiscussionForm(instance=discussion)
     
-    return render(request, 'editDiscussion.html', {'form': form})
+    return render(request, 'editDiscussion.html', {'form': form, 'discussion' : discussion})
 
 
 @login_required(login_url="/login")
@@ -68,30 +68,37 @@ def home(request):
     return render(request,'home.html',context)
  
 def addInForum(request):
-    form = CreateInForum()
-    if request.method == 'POST':
-        form = CreateInForum(request.POST)
-        if form.is_valid():
-            form_entry = form.save(commit=False)
-            form_entry.name = request.user
-            form_entry.save()
-            return redirect('/')
-    context ={'form':form}
-    return render(request,'addInForum.html',context)
+    form = ForumForm(request.POST or None)
+
+    if form.is_valid() and request.method == 'POST':
+        form_entry = form.save(commit = False)
+        form_entry.username = request.user
+        form_entry.save()
+        return redirect('main:home')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, "addInForum.html", context)
+
 
 
 @login_required(login_url="/login")
 def addInDiscussion(request):
-    form = CreateInDiscussion()
-    if request.method == 'POST':
-        form = CreateInDiscussion(request.POST)
-        if form.is_valid():
-            form_entry = form.save(commit=False)
-            form_entry.username = request.user
-            form_entry.save()
-            return redirect('/')
-    context ={'form':form}
-    return render(request,'addInDiscussion.html',context)
+    form = DiscussionForm(request.POST or None)
+
+    if form.is_valid() and request.method == 'POST':
+        form_entry = form.save(commit = False)
+        form_entry.username = request.user
+        form_entry.save()
+        return redirect('main:home')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, "addInDiscussion.html", context)
  
  
 # legacy functions
