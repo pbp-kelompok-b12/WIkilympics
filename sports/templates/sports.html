@@ -10,14 +10,13 @@
 {% include 'create_sport_modal.html' %}
 {% include 'edit_sport_modal.html' %}
 
-
-<div style="background-color: rgb(217, 227, 229);" class="w-full pt-16 min-h-screen">
+<div style="background-color: rgb(30, 60, 200);" class="w-full pt-16 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <!-- Header Section -->
         <div class="mb-8 text-center">
-            <h1 class="text-4xl font-extrabold tracking-wide select-none mb-2" style="font-family: 'Orbitron', sans-serif; color: rgb(10, 32, 61);">OLYMPIC SPORTS</h1>
-            <p class="text-lg tracking-wide" style="font-family: 'Poppins', sans-serif; color: rgb(100, 116, 139);">Every Olympic sport has a story — uncover them all with WIkilympics!</p>
+            <h1 class="text-4xl font-extrabold tracking-wide select-none mb-2" style="font-family: 'Orbitron', sans-serif; color: white;">OLYMPIC SPORTS</h1>
+            <p class="text-lg tracking-wide" style="font-family: 'Poppins', sans-serif; color: rgb(255, 255, 0);">Every Olympic sport has a story — uncover them all with WIkilympics!</p>
         </div>
 
         <!-- Search + Filter + Add -->
@@ -30,12 +29,12 @@
                     id="searchInput"
                     value="{{ search_query }}"
                     placeholder="Search for a sport..." 
-                    class="w-full pl-4 pr-12 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[rgb(45,94,140)] focus:border-transparent text-gray-700 shadow-sm placeholder-gray-400"
+                    class="w-full pl-4 pr-12 py-3 rounded-full border border-[rgb(255,255,0)] focus:outline-none focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent text-[rgb(30,60,200)] shadow-sm placeholder-gray-400 bg-white"
                     style="font-family: 'Poppins', sans-serif;"
                 >
                 <button 
                     type="submit" 
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[rgb(45,94,140)] hover:text-[rgb(10,32,61)] transition-colors"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[rgb(255,255,0)] hover:text-white transition-colors"
                 >
                     <i class="fa-solid fa-magnifying-glass text-xl"></i>
                 </button>
@@ -43,31 +42,32 @@
 
             <!-- Dropdown Filters -->
             <div class="flex items-center gap-3">
-                <select id="participationFilter" class="px-4 py-2 font-semibold rounded-md border border-gray-300 focus:ring-2 focus:ring-[rgb(45,94,140)] focus:border-transparent transition-colors" style="background-color: rgb(45, 94, 140); color: white; outline: 2px solid rgb(10, 32, 61); font-family: 'Poppins', sans-serif;"
-                    onmouseover="this.style.backgroundColor='rgb(10, 32, 61)';"
-                    onmouseout="this.style.backgroundColor='rgb(45, 94, 140)';">
-                    <option value="">All Participation</option>
+                <select id="participationFilter" class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
+                    onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)';"
+                    onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';">
+                    <option value="">All Participation Types</option>
                     <option value="individual">Individual</option>
                     <option value="team">Team</option>
+                    <option value="both">Individual & Team</option>
                 </select>
 
-                <select id="typeFilter" class="px-4 py-2 font-semibold rounded-md border border-gray-300 focus:ring-2 focus:ring-[rgb(45,94,140)] focus:border-transparent transition-colors" style="background-color: rgb(45, 94, 140); color: white; outline: 2px solid rgb(10, 32, 61); font-family: 'Poppins', sans-serif;"
-                    onmouseover="this.style.backgroundColor='rgb(10, 32, 61)';"
-                    onmouseout="this.style.backgroundColor='rgb(45, 94, 140)';">
-                    <option value="">All Types</option>
+                <select id="typeFilter" class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
+                    onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)';"
+                    onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';">
+                    <option value="">All Discipline Types</option>
                     {% for key, value in categories.items %}
                         <option value="{{ key }}">{{ value }}</option>
                     {% endfor %}
                 </select>
 
                 {% if user.is_authenticated and user.username == "admin" %}
-                    <button onclick="showModal()" 
-                        class="inline-flex items-center px-4 py-2 font-semibold rounded-md transition-colors"
-                        style="background-color: rgb(45, 94, 140); color: white; outline: 2px solid rgb(10, 32, 61);"
-                        onmouseover="this.style.backgroundColor='rgb(10, 32, 61)';"
-                        onmouseout="this.style.backgroundColor='rgb(45, 94, 140)';">
-                        Add Olympic Sport
-                    </button>
+                <button onclick="showModal()" 
+                    class="flex items-center justify-center w-12 h-12 rounded-full shadow-md transition-all duration-200"
+                    style="background-color: rgb(255,255,0); color: rgb(30,60,200); outline: 2px solid white;"
+                    onmouseover="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)'; this.style.transform='scale(1.1)';"
+                    onmouseout="this.style.backgroundColor='rgb(255, 255, 0)'; this.style.color='rgb(30,60,200)'; this.style.transform='scale(1)';">
+                    <i class="fa-solid fa-plus text-lg"></i>
+                </button>
                 {% endif %}
             </div>
         </div>
@@ -77,7 +77,7 @@
             {% for sport in sports_list %}
                 {% include 'sport_card.html' with sport=sport %}
                 {% empty %}
-                <p class="col-span-full text-center text-gray-600">No sports found</p>
+                <p class="col-span-full text-center text-white">No sports available. Please add a new sport using the + button above.</p>
             {% endfor %}
         </div>
     </div>
@@ -114,6 +114,17 @@
             document.querySelector("#sportsGrid").innerHTML = newGrid;
         });
     }
+
+    document.addEventListener("sportAdded", function() {
+        updateFilters();
+    });
+
+    document.addEventListener("sportEdited", function() {
+        updateFilters();
+    });
+
 </script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 {% endblock content %}

@@ -23,7 +23,11 @@
         <div>
             <h3 class="text-xl font-bold">{{ sport.sport_name }}</h3>
         </div>              
-        <a href="{% url 'sports:show_sport' sport.id %}" class="mt-4 inline-block text-white px-3 py-2 rounded transition-colors w-max" style="background-color: rgb(220, 230, 103);" onmouseover="this.style.backgroundColor='rgb(200, 210, 80)'" onmouseout="this.style.backgroundColor='rgb(220, 230, 103)'">
+        <a href="{% url 'sports:show_sport' sport.id %}" 
+            class="mt-4 inline-block px-4 py-2 rounded-full font-semibold transition-all duration-200 shadow-md w-max"
+            style="background-color: white; color: rgb(30,60,200); outline: 2px solid white;" 
+            onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)'; this.style.transform='scale(1.1)';" 
+            onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)'; this.style.transform='scale(1)';"> 
             Discover More
         </a>
     </div>
@@ -34,14 +38,20 @@
         <!-- Edit button -->
         <a href="javascript:void(0);" 
             onclick="setupEditModal('{{ sport.id }}')"
-            class="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors flex items-center justify-center">
+            class="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+            style="transform: scale(1);"
+            onmouseover="this.style.transform='scale(1.1)';"
+            onmouseout="this.style.transform='scale(1)';">
             <i class="fa-solid fa-pencil" style="color: #ffffff;"></i>
         </a>     
     
         <!-- Delete button -->
         <a href="javascript:void(0);" 
             onclick="deleteSport('{{ sport.id }}')"
-            class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors flex items-center justify-center">
+            class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors flex items-center justify-center"
+            style="transform: scale(1);"
+            onmouseover="this.style.transform='scale(1.1)';"
+            onmouseout="this.style.transform='scale(1)';">
             <i class="fa-solid fa-trash"></i>
         </a>
     </div>
@@ -62,16 +72,13 @@
             const data = await response.json();
     
             if (data.status === "success") {
-                // Tampilkan pesan sukses
                 alert(data.message);
     
-                // Hapus card-nya dari DOM tanpa reload
                 const card = document.getElementById(`sport-card-${sportId}`);
                 if (card) {
                     card.remove();
                 }
     
-                // Jika kamu punya event listener global, bisa juga trigger ini
                 document.dispatchEvent(new CustomEvent('sportDeleted', { detail: sportId }));
             } else {
                 alert("Failed to delete sport: " + data.message);

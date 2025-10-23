@@ -6,6 +6,7 @@ class Sports(models.Model):
     PARTICIPATION_STRUCTURE = [
         ('individual', 'Individual'),
         ('team', 'Team'),
+        ('both', 'Individual & Team')
     ]
 
     SPORT_TYPE = [
