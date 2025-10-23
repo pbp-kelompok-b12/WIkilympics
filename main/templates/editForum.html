@@ -7,23 +7,53 @@
   <title>Edit Forum</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#f9fafb] text-[#1f2937]">
-  <section class="w-full bg-[#f3f4f6] border-b border-[#d1d5db]">
+<body class="bg-gray-50">
+  
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200">
     <div class="container mx-auto px-4 py-6">
-      <h2 class="text-2xl font-semibold">Edit Forum</h2>
+      <h2 class="text-2xl font-bold text-gray-800">Edit Forum</h2>
     </div>
-  </section>
+  </header>
 
-  <main class="container mx-auto px-4 py-6">
-    <form method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button
-        type="submit"
-        class="px-3 py-1.5 rounded-md bg-[#16a34a] hover:bg-[#15803d] text-[#ffffff] text-sm font-medium shadow-sm transition">
-        Save Changes
-      </button>
-    </form>
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 max-w-2xl">
+    
+    <!-- Card Box -->
+    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-8">
+      
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Topic Field -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Topic</label>
+          <input 
+            type="text" 
+            name="topic" 
+            value="Ohm"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent transition">
+        </div>
+
+        <!-- Description Field -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+          <textarea 
+            name="description" 
+            rows="4"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent transition">Wattdasasd</textarea>
+        </div>
+
+        <!-- Button -->
+        <button
+          type="submit"
+          class="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md shadow transition">
+          Save Changes
+        </button>
+      </form>
+      
+    </div>
   </main>
+
 </body>
 </html>

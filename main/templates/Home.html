@@ -95,9 +95,7 @@
                         </div>
 
                         <div class="flex items-center gap-2 shrink-0">
-                        <b class="italic text-[#0b1936]">| {{ objs.username.username }}</b>
-
-                        {% if  objs.username == request.user or request.user.is_superuser %}
+                          {% if  objs.username == request.user or request.user.is_superuser %}
                             <form method="POST" action="{% url 'main:delete_discussion' objs.id %}" class="inline-block">
                             {% csrf_token %}
                             <button
@@ -129,6 +127,9 @@
                               
                             </a>
                         {% endif %}
+                        <b class="italic text-[#0b1936]">| {{ objs.username.username }}</b>
+
+                        
                         </div>
                     </div>
 

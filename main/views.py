@@ -17,7 +17,7 @@ from .forms import *
 from django.views.generic.edit import CreateView
 
 
-@login_required
+@login_required(login_url="/login")
 def edit_forum(request, id):
     forum = get_object_or_404(Forum, id=id)
     
@@ -35,7 +35,8 @@ def edit_forum(request, id):
     return render(request, 'editForum.html', {'form': form})
 
 
-@login_required
+
+@login_required(login_url="/login")
 def edit_discussion(request, id):
     discussion = get_object_or_404(Discussion, id=id)
     
@@ -52,7 +53,8 @@ def edit_discussion(request, id):
     
     return render(request, 'editDiscussion.html', {'form': form})
 
-@login_required
+
+@login_required(login_url="/login")
 def home(request):
     forums = Forum.objects.all()
     count=forums.count()
@@ -77,7 +79,8 @@ def addInForum(request):
     context ={'form':form}
     return render(request,'addInForum.html',context)
 
-@login_required
+
+@login_required(login_url="/login")
 def addInDiscussion(request):
     form = CreateInDiscussion()
     if request.method == 'POST':
@@ -92,7 +95,8 @@ def addInDiscussion(request):
  
  
 # legacy functions
-@login_required
+
+@login_required(login_url="/login")
 def show_main(request):
     context = {
     'npm': '240123456',
@@ -111,7 +115,8 @@ def delete_discussion(request, id):
     return redirect('main:home')
 
 @require_POST
-@login_required
+
+@login_required(login_url="/login")
 def delete_forum(request, id):
     forum = get_object_or_404(Forum, pk=id,name=request.user )
     forum.delete()
