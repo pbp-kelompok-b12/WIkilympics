@@ -6,43 +6,90 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-950 to-black text-white py-20 px-6">
-  <div class="max-w-4xl mx-auto">
 
-    <!-- Tombol Kembali -->
-    <a href="{% url 'article:show_articles' %}"
-        class="inline-flex items-center text-yellow-400 hover:text-yellow-300 font-semibold mb-10 transition-all duration-200">
-        ← Back to Articles
-    </a>
+<div class="relative w-full h-[60vh] overflow-hidden">
+    
+    <div class="absolute inset-0 bg-cover bg-center" 
+         style="background-image: url('{{ article.thumbnail }}');">
+    </div>
+    
+    <div class="absolute inset-0" 
+         style="background: linear-gradient(to top, #001C5B 10%, rgba(0, 28, 91, 0.6) 60%, rgba(10, 66, 224, 0.3) 100%);">
+    </div>
 
-    <!-- Kartu Artikel -->
-    <article class="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-2xl shadow-2xl p-8 hover:shadow-yellow-500/10 transition-all duration-300">
-        <h1 class="text-4xl font-extrabold text-yellow-300 mb-6 leading-tight">
+    <div class="relative max-w-6xl mx-auto h-full flex flex-col justify-end p-6 sm:p-10 text-center">
+        <div class="absolute top-10 left-6 sm:left-10">
+            <a href="{% url 'article:show_articles' %}"
+                class="inline-flex items-center text-yellow-400 hover:text-yellow-300 font-semibold transition-all duration-200">
+                ← Back to Articles
+            </a>
+        </div>
+        
+        <h1 class="text-6xl font-extrabold text-white leading-tight drop-shadow-lg mb-6">
         {{ article.title }}
         </h1>
-
-        <!-- Info Tambahan -->
-        <div class="flex items-center text-sm text-gray-400 mb-8">
-            <span class="uppercase tracking-widest text-yellow-400/80">{{ article.category }}</span>
-            <span class="mx-2 text-gray-600">•</span>
-            <span>{{ article.created|date:"F d, Y" }}</span>
+        
+        <div class="flex flex-col items-center text-sm text-gray-300 mb-4 space-y-2">
+            <span class="uppercase tracking-widest text-white/90">
+                Category: <strong class="text-yellow-400 font-extrabold">{{ article.category }}</strong>
+            </span>
+            <span class="text-white/70">
+                Published: {{ article.created|date:"F d, Y" }}
+            </span>
         </div>
-
-        <!-- Thumbnail -->
-        {% if article.thumbnail %}
-        <div class="overflow-hidden rounded-xl border border-slate-800 mb-8">
-            <img src="{{ article.thumbnail }}" 
-                alt="{{ article.title }}" 
-                class="w-full object-cover transform transition-transform duration-500 hover:scale-105">
-        </div>
-        {% endif %}
-
-        <!-- Konten -->
-        <div class="text-gray-200 leading-relaxed text-lg space-y-5 break-words">
-            {{ article.content|linebreaks }}
-        </div>
-    </article>
-
-  </div>
+    </div>
 </div>
+
+<div class="w-full text-gray-100 py-16" 
+    style="background-color: #001C5B;">
+    
+    <div class="w-full">
+        
+        <article class="leading-relaxed text-lg space-y-8 break-words px-8 sm:px-16 lg:px-24">
+            {{ article.content|linebreaks }}
+        </article>
+
+        <div class="mt-20 pt-10 border-t border-blue-600/50 text-center space-y-6 max-w-4xl mx-auto px-6">
+            <h3 class="text-3xl font-bold text-yellow-400">What's Next in Sports?</h3>
+            <p class="text-lg text-gray-300">Don't miss out on the latest scores, events, and athlete stories. Explore more content or join the discussion!</p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="{% url 'article:show_articles' %}" 
+                   class="bg-yellow-400 text-[#001C5B] font-bold px-6 py-3 rounded-full hover:bg-yellow-300 transition-colors">
+                    View More Articles
+                </a>
+                <a href="#" 
+                   class="border border-white/50 text-white font-bold px-6 py-3 rounded-full hover:bg-white/10 transition-colors">
+                    Join the Discussion
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="imageModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 transition-opacity duration-300" onclick="closeModal()">
+    <div class="max-w-screen-xl max-h-screen p-8 relative">
+        <button class="absolute top-2 right-2 text-white text-3xl font-light p-2 hover:text-yellow-400" onclick="closeModal()">&times;</button>
+        <img id="modalImage" src="" alt="Full-size article image" class="max-w-full max-h-[90vh] object-contain cursor-pointer" onclick="event.stopPropagation()">
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+
+    // Tampilkan modal saat gambar hero diklik
+    document.querySelector('.relative.w-full.h-\\[60vh\\]').addEventListener('click', function(e) {
+        // Hanya buka modal jika yang diklik bukan tombol back
+        if (e.target.closest('a') === null) {
+            modalImage.src = '{{ article.thumbnail }}';
+            modal.classList.remove('hidden');
+        }
+    });
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+</script>
+
 {% endblock content %}

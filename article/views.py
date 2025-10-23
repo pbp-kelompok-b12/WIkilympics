@@ -5,6 +5,7 @@ from django.urls import reverse
 from article.models import Article
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from article.forms import ArticleForm
 
 # Create your views here.
 def show_articles(request):
@@ -50,46 +51,48 @@ def show_json_id(request, article_id) :
 @csrf_exempt
 @require_POST
 def add_article(request):
-    title = request.POST.get("title")
-    content = request.POST.get("content")
-    category = request.POST.get("category")
-    thumbnail = request.POST.get("thumbnail")
+    form = ArticleForm(request.POST) 
 
-    new_article = Article(
-        title=title,
-        content=content,
-        category=category,
-        thumbnail=thumbnail,
-    )
-    new_article.save()
-    
-    return JsonResponse({'success':True})
+    if form.is_valid():
+        new_article = form.save(commit=False)
+        new_article.save()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False})
 
-# @csrf_exempt
 @require_POST
 def edit_article(request, id):
     article = get_object_or_404(Article, pk=id)
-    article.title = request.POST.get("title")
-    article.content = request.POST.get("content")
-    article.category = request.POST.get("category")
-    article.thumbnail = request.POST.get("thumbnail")
-    article.save()
+   
+    form = ArticleForm(request.POST, instance=article) 
 
-    return JsonResponse({'success':True})
+    if form.is_valid():
+        form.save()
+        return JsonResponse({'success': True, 'message': 'Article updated successfully.'}, status=200)
+    else:
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    
 
-# @require_POST
+@require_POST
 def delete_article(request, id):
     article = get_object_or_404(Article, pk=id)
     article.delete()
     return JsonResponse({'success':True})
 
 def article_detail(request, id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('article:show_articles'))
+    
     article = get_object_or_404(Article, pk=id)
+    
     context={'article':article}
     return render(request, "article_detail.html", context)
 
-@login_required(login_url='main:login_user')
+# @login_required(login_url='main:login_user')
 def like_article(request, article_id):
+    if not request.user.is_authenticated:
+        return JsonResponse ({'success': False}, status=403)
+    
     article = get_object_or_404(Article, pk=article_id)
 
     if request.user in article.like_user.all():
@@ -101,8 +104,11 @@ def like_article(request, article_id):
         article.like_user.add(request.user)
     return JsonResponse({'success': True, 'likes': article.like_user.count()})
 
-@login_required(login_url='main:login_user')
+# @login_required(login_url='main:login_user')
 def dislike_article(request, article_id):
+    if not request.user.is_authenticated:
+        return JsonResponse ({'success': False}, status=403)
+    
     article = get_object_or_404(Article, pk=article_id)
 
     if request.user in article.dislike_user.all():

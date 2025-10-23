@@ -8,20 +8,19 @@
 {% block content %}
 {% include 'navbar.html' %} 
 
-<div class="relative min-h-screen text-white pt-20" 
-     style="background-color: #001C5B;"> 
-    <div class="absolute inset-0 z-0" 
-         style="background: linear-gradient(to bottom, rgba(0, 28, 91, 0.8) 0%, rgba(10, 66, 224, 0.1) 50%, rgba(0, 28, 91, 0.8) 100%);">
-    </div>
+<div class="min-h-screen bg-blue-950 text-white p-8 pt-20">
+    <div class="max-w-7xl mx-auto">
 
-    <div class="relative z-10 max-w-full px-4 sm:px-6 lg:px-8 pb-8">
-        <h1 class="text-5xl font-bold mb-8 border-b border-blue-700 pb-3 pt-5">Sports Articles</h1>
+        <!-- Judul utama -->
+        <h1 class="text-3xl font-bold mb-8 border-b border-blue-700 pb-3 pt-5">Sports Article</h1>
         
+        <!-- Deskripsi -->
         <p class="text-lg text-gray-300 mb-10">
         Stay updated with the latest sports news and stories — from record-breaking performances 
         to behind-the-scenes moments. Explore insights, highlights, and inspiring journeys from the world of sports.
         </p>
 
+        <!-- Filter categories -->
         <div class="mt-8 mb-6">
             <label for="category-filter-select" class="block text-xl font-semibold mb-2 text-white">Filter by Category</label>
             <select id="category-filter-select" onchange="filterArticles(this.value)"
@@ -29,16 +28,19 @@
                 </select>
         </div>
 
+        <!-- Seksi Sorotan -->
         <div class="bg-blue-900/40 rounded-2xl p-6 shadow-lg border border-blue-800">
         <h2 class="text-2xl font-semibold text-white mb-2">Article Highlights</h2>
         <p class="text-gray-300">
             Catch up on the top trending matches, athlete spotlights, and exclusive analysis from experts. 
             Discover stories that move the game forward.
         </p>
+
+        <div id="trending-list" class="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide"></div>
         
-        <div id="trending-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </div>
 
+        <!-- Tombol Tambah Artikel -->
         {% if request.user.is_superuser %}
         <div class="mt-6">
             <button onclick="showAddModal()" class="bg-yellow-400 text-blue-950 font-semibold px-6 py-2 rounded-full hover:bg-yellow-300 transition-all duration-300">
@@ -81,44 +83,14 @@
                 
                 <div class="mb-4">
                     <label for="category" class="block text-sm font-medium text-blue-300">Category</label>
-                    <select id="category" name="category"
-                        class="mt-1 block w-full border border-blue-700 rounded-md px-3 py-2 bg-blue-900 text-white focus:ring-yellow-400 focus:border-yellow-400"
-                        required>
+                    <select id="category" name="category" class="mt-1 block w-full border border-blue-700 rounded-md px-3 py-2 bg-blue-900 text-white focus:ring-yellow-400 focus:border-yellow-400" required>
                         <option value="" disabled selected class="text-gray-500">Choose a category...</option>
                         <option value="athletics">Athletics</option>
-                        <option value="archery">Archery</option>
-                        <option value="artistic_gymnastics">Artistic Gymnastics</option>
-                        <option value="artistic_swimming">Artistic Swimming</option>
-                        <option value="badminton">Badminton</option>
-                        <option value="baseball_softball">Baseball/Softball</option>
-                        <option value="basketball">Basketball</option>
-                        <option value="beach_volleyball">Beach Volleyball</option>
-                        <option value="boxing">Boxing</option>
-                        <option value="canoe_slalom">Canoe Slalom</option>
-                        <option value="cycling_road">Cycling Road</option>
-                        <option value="diving">Diving</option>
-                        <option value="fencing">Fencing</option>
-                        <option value="football">Football</option>
-                        <option value="handball">Handball</option>
-                        <option value="hockey">Hockey</option>
-                        <option value="judo">Judo</option>
-                        <option value="karate">Karate</option>
-                        <option value="marathon_swimming">Marathon Swimming</option>
-                        <option value="rowing">Rowing</option>
-                        <option value="rhythmic_gymnastics">Rhythmic Gymnastics</option>
-                        <option value="sailing">Sailing</option>
-                        <option value="shooting">Shooting</option>
                         <option value="swimming">Swimming</option>
-                        <option value="table_tennis">Table Tennis</option>
-                        <option value="taekwondo">Taekwondo</option>
-                        <option value="trampoline_gymnastics">Trampoline Gymnastics</option>
-                        <option value="triathlon">Triathlon</option>
-                        <option value="water_polo">Water Polo</option>
-                        <option value="weightlifting">Weightlifting</option>
-                        <option value="wrestling">Wrestling</option>
+                        <option value="b">B (Category B)</option>
+                        <option value="a">A (Category A)</option>
                     </select>
                 </div>
-
 
                 <div class="mb-4">
                     <label for="content" class="block text-sm font-medium text-blue-300">Article Content</label>
@@ -146,6 +118,7 @@ const IS_ADMIN = "{{ request.user.is_superuser|yesno:'true,false' }}";
 
 const URL_JSON = "{% url 'article:show_json' %}";
 const URL_ADD = "{% url 'article:add_article' %}";
+const URL_EDIT = `{% url 'article:delete_article' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', id);
 const URL_DELETE = id => `{% url 'article:delete_article' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', id);
 
 const URL_LIKE = id => `{% url 'article:like_article' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', id);
@@ -246,7 +219,7 @@ function filterArticles(category) {
     
     // Pisahkan data yang sudah difilter ke trending dan normal
     const trending = articlesToRender.filter(a => a.likes > 6);
-    const normal = articlesToRender;
+    const normal = articlesToRender.filter(a => a.likes <= 6);
 
     TRENDING.innerHTML = trending.length
         ? trending.map(a => renderArticle(a, true)).join('')
@@ -297,15 +270,40 @@ async function loadArticles() {
     filterArticles(CURRENT_FILTER);
 }
 
-// Template kartu artikel
-function renderArticle(a, isTrending = false) {
+// Article card
+function renderArticle(a, horizontal = false) {
+    const likeColor = a.is_liked ? 'text-yellow-400' : 'hover:text-yellow-400';
+    const dislikeColor = a.is_disliked ? 'text-red-400' : 'hover:text-red-400';
+    
+    // Kelas dasar yang WAJIB ADA di semua tombol untuk visual yang konsisten
     const baseButtonClasses = 'flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-all duration-200';
+    
+    // Kelas default (Pasif): Teks abu-abu terang, latar transparan dengan border tipis
     const passiveClasses = 'text-gray-400 border border-blue-700 hover:bg-blue-800';
+    
+    // Kelas aktif Like: Latar kuning, teks biru gelap (kontras tinggi)
     const activeLikeClasses = 'bg-yellow-400 text-blue-950 font-bold border-yellow-400 shadow-md';
+    
+    // Kelas aktif Dislike: Latar merah, teks putih
     const activeDislikeClasses = 'bg-red-600 text-white font-bold border-red-600 shadow-md';
 
-    const likeClasses = a.is_liked ? `${baseButtonClasses} ${activeLikeClasses}` : `${baseButtonClasses} ${passiveClasses}`;
-    const dislikeClasses = a.is_disliked ? `${baseButtonClasses} ${activeDislikeClasses}` : `${baseButtonClasses} ${passiveClasses}`;               
+    // Tentukan kelas akhir untuk Like
+    const likeClasses = a.is_liked 
+        ? `${baseButtonClasses} ${activeLikeClasses}` 
+        : `${baseButtonClasses} ${passiveClasses}`;
+
+    // Tentukan kelas akhir untuk Dislike
+    const dislikeClasses = a.is_disliked 
+        ? `${baseButtonClasses} ${activeDislikeClasses}` 
+        : `${baseButtonClasses} ${passiveClasses}`;
+
+
+
+
+    
+    
+    const img = a.thumbnail || 'https://via.placeholder.com/400x200?text=No+Image';
+    const card = horizontal ? "w-80 flex-shrink-0" : "w-full";
 
     let detailLink;
     if (IS_AUTHENTICATED) {
@@ -314,7 +312,7 @@ function renderArticle(a, isTrending = false) {
         detailLink = `href="#" onclick="showLoginAlert(event); return false;"`;
     }
 
-    // Delete/Edit button for admin
+    // Delete button for admin
     const adminActions = IS_ADMIN ? `
         <button onclick="showEditModal('${a.id}')" class="text-yellow-400 hover:text-yellow-300 font-bold text-sm">
             Edit
@@ -325,29 +323,13 @@ function renderArticle(a, isTrending = false) {
     ` : '';
 
     return `
-    <div class="bg-blue-900 border border-blue-700 rounded-lg shadow w-full flex flex-col overflow-hidden">
-        
-        <a ${detailLink} class="block h-40">
-            <img src="${a.thumbnail}" class="w-full h-full object-cover">
-        </a>
-        
-        <div class="p-4 flex flex-col flex-grow">
+    <div class="bg-blue-900 border border-blue-700 rounded-lg overflow-hidden shadow ${card}">
+        <a ${detailLink}><img src="${img}" class="w-full h-48 object-cover"></a>
+        <div class="p-4">
             <p class="text-sm text-blue-300">${a.category}</p>
-            
-            <h2 class="text-lg font-semibold text-white mb-2 leading-snug max-h-12 overflow-hidden">
-                ${a.title}
-            </h2>
-            
-            <p class="text-blue-400 text-sm mb-3" style="
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 2; /* BATAS UTAMA: 2 baris */
-            ">
-                ${a.content}
-            </p> 
-
-            <div class="flex justify-between items-center text-sm mt-auto pt-2 border-t border-blue-800/50">
+            <h2 class="text-lg font-semibold text-white mb-2">${a.title}</h2>
+            <p class="text-blue-400 text-sm mb-3">${a.content.slice(0, 100)}...</p>
+            <div class="flex justify-between items-center text-sm">
                 <span class="text-blue-500">${formatTimeAgo(a.created)}</span>
                 <div class="flex gap-3">
                     <button onclick="react('${a.id}','like')" class="${likeClasses}">👍 ${a.likes}</button>
@@ -403,7 +385,7 @@ document.getElementById("articleForm").addEventListener("submit", async e => {
 
     // Edit
     if (articleId) {
-        url = `{% url 'article:edit_article' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', articleId);
+        url = URL_EDIT
     } else {    // Add
         url = URL_ADD;
     }
