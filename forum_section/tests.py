@@ -67,12 +67,12 @@ class HomeViewTest(TestCase):
         )
     
     def test_home_view_requires_login(self):
-        response = self.client.get(reverse('main:home'))
+        response = self.client.get(reverse('forum_section:home'))
         self.assertEqual(response.status_code, 302)
     
     def test_home_view_logged_in(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.get(reverse('main:home'))
+        response = self.client.get(reverse('forum_section:home'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
         self.assertIn('forums', response.context)
@@ -93,30 +93,30 @@ class EditForumViewTest(TestCase):
         )
     
     def test_edit_forum_requires_login(self):
-        response = self.client.get(reverse('main:edit_forum', args=[self.forum.id]))
+        response = self.client.get(reverse('forum_section:edit_forum', args=[self.forum.id]))
         self.assertEqual(response.status_code, 302)
     
     def test_edit_forum_owner_can_access(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.get(reverse('main:edit_forum', args=[self.forum.id]))
+        response = self.client.get(reverse('forum_section:edit_forum', args=[self.forum.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'editForum.html')
     
     def test_edit_forum_non_owner_redirected(self):
         self.client.login(username='otheruser', password='testpass123')
-        response = self.client.get(reverse('main:edit_forum', args=[self.forum.id]))
-        self.assertRedirects(response, reverse('main:home'))
+        response = self.client.get(reverse('forum_section:edit_forum', args=[self.forum.id]))
+        self.assertRedirects(response, reverse('forum_section:home'))
     
     def test_edit_forum_post(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.post(reverse('main:edit_forum', args=[self.forum.id]), {
+        response = self.client.post(reverse('forum_section:edit_forum', args=[self.forum.id]), {
             'topic': 'Updated Forum',
             'description': 'Updated Description',
             'thumbnail': 'https://example.com/new.jpg'
         })
         self.forum.refresh_from_db()
         self.assertEqual(self.forum.topic, 'Updated Forum')
-        self.assertRedirects(response, reverse('main:home'))
+        self.assertRedirects(response, reverse('forum_section:home'))
 
 
 class EditDiscussionViewTest(TestCase):
@@ -135,12 +135,12 @@ class EditDiscussionViewTest(TestCase):
         )
     
     def test_edit_discussion_requires_login(self):
-        response = self.client.get(reverse('main:edit_discussion', args=[self.discussion.id]))
+        response = self.client.get(reverse('forum_section:edit_discussion', args=[self.discussion.id]))
         self.assertEqual(response.status_code, 302)
     
     def test_edit_discussion_owner_can_access(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.get(reverse('main:edit_discussion', args=[self.discussion.id]))
+        response = self.client.get(reverse('forum_section:edit_discussion', args=[self.discussion.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'editDiscussion.html')
 
@@ -151,19 +151,19 @@ class AddInForumViewTest(TestCase):
         self.user = User.objects.create_user(username='testuser', password='testpass123')
     
     def test_add_forum_requires_login(self):
-        response = self.client.get(reverse('main:addInForum'))
+        response = self.client.get(reverse('forum_section:addInForum'))
         self.assertEqual(response.status_code, 302)
     
     def test_add_forum_get(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.get(reverse('main:addInForum'))
+        response = self.client.get(reverse('forum_section:addInForum'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'addInForum.html')
     
     def test_add_forum_ajax_post(self):
         self.client.login(username='testuser', password='testpass123')
         response = self.client.post(
-            reverse('main:addInForum'),
+            reverse('forum_section:addInForum'),
             {
                 'topic': 'New Forum',
                 'description': 'New Description',
@@ -188,26 +188,26 @@ class AddInDiscussionViewTest(TestCase):
         )
     
     def test_add_discussion_requires_login(self):
-        response = self.client.get(reverse('main:addInDiscussion', args=[self.forum.id]))
+        response = self.client.get(reverse('forum_section:addInDiscussion', args=[self.forum.id]))
         self.assertEqual(response.status_code, 302)
     
     def test_add_discussion_get(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.get(reverse('main:addInDiscussion', args=[self.forum.id]))
+        response = self.client.get(reverse('forum_section:addInDiscussion', args=[self.forum.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'addInDiscussion.html')
     
     def test_add_discussion_post(self):
         self.client.login(username='testuser', password='testpass123')
         response = self.client.post(
-            reverse('main:addInDiscussion', args=[self.forum.id]),
+            reverse('forum_section:addInDiscussion', args=[self.forum.id]),
             {
                 'forum': self.forum.id,
                 'discuss': 'New discussion content'
             }
         )
         self.assertEqual(Discussion.objects.count(), 1)
-        self.assertRedirects(response, reverse('main:home'))
+        self.assertRedirects(response, reverse('forum_section:home'))
 
 
 class DeleteForumViewTest(TestCase):
@@ -221,12 +221,12 @@ class DeleteForumViewTest(TestCase):
         )
     
     def test_delete_forum_requires_login(self):
-        response = self.client.post(reverse('main:delete_forum', args=[self.forum.id]))
+        response = self.client.post(reverse('forum_section:delete_forum', args=[self.forum.id]))
         self.assertEqual(response.status_code, 302)
     
     def test_delete_forum_owner(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.post(reverse('main:delete_forum', args=[self.forum.id]))
+        response = self.client.post(reverse('forum_section:delete_forum', args=[self.forum.id]))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertTrue(data['success'])
@@ -249,13 +249,13 @@ class DeleteDiscussionViewTest(TestCase):
         )
     
     def test_delete_discussion_requires_login(self):
-        response = self.client.post(reverse('main:delete_discussion', args=[self.discussion.id]))
+        response = self.client.post(reverse('forum_section:delete_discussion', args=[self.discussion.id]))
         self.assertEqual(response.status_code, 302)
     
     def test_delete_discussion_owner(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.post(reverse('main:delete_discussion', args=[self.discussion.id]))
-        self.assertRedirects(response, reverse('main:home'))
+        response = self.client.post(reverse('forum_section:delete_discussion', args=[self.discussion.id]))
+        self.assertRedirects(response, reverse('forum_section:home'))
         self.assertEqual(Discussion.objects.count(), 0)
 
 
@@ -264,18 +264,18 @@ class RegisterViewTest(TestCase):
         self.client = Client()
     
     def test_register_get(self):
-        response = self.client.get(reverse('main:register'))
+        response = self.client.get(reverse('forum_section:register'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'register.html')
     
     def test_register_post_valid(self):
-        response = self.client.post(reverse('main:register'), {
+        response = self.client.post(reverse('forum_section:register'), {
             'username': 'newuser',
             'password1': 'complexpass123',
             'password2': 'complexpass123'
         })
         self.assertEqual(User.objects.count(), 1)
-        self.assertRedirects(response, reverse('main:login'))
+        self.assertRedirects(response, reverse('forum_section:login'))
 
 
 class LoginViewTest(TestCase):
@@ -284,16 +284,16 @@ class LoginViewTest(TestCase):
         self.user = User.objects.create_user(username='testuser', password='testpass123')
     
     def test_login_get(self):
-        response = self.client.get(reverse('main:login'))
+        response = self.client.get(reverse('forum_section:login'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'login.html')
     
     def test_login_post_valid(self):
-        response = self.client.post(reverse('main:login'), {
+        response = self.client.post(reverse('forum_section:login'), {
             'username': 'testuser',
             'password': 'testpass123'
         })
-        self.assertRedirects(response, reverse('main:show_main'))
+        self.assertRedirects(response, reverse('forum_section:show_main'))
 
 
 class LogoutViewTest(TestCase):
@@ -303,8 +303,8 @@ class LogoutViewTest(TestCase):
     
     def test_logout(self):
         self.client.login(username='testuser', password='testpass123')
-        response = self.client.get(reverse('main:logout'))
-        self.assertRedirects(response, reverse('main:login'))
+        response = self.client.get(reverse('forum_section:logout'))
+        self.assertRedirects(response, reverse('forum_section:login'))
 
 
 class ForumFormTest(TestCase):

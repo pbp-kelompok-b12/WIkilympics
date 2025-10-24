@@ -1,8 +1,8 @@
 from django.urls import path
-from main.views import *
+from .views import *
 from django.contrib import admin
 
-app_name = 'main'
+app_name = 'forum_section'
 
 urlpatterns = [
     path('admin/', admin.site.urls),

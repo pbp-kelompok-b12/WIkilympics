@@ -67,7 +67,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         blank=True,
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="main.forum",
+                        to="forum_section.forum",
                     ),
                 ),
             ],

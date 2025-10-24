@@ -22,13 +22,13 @@ def edit_forum(request, id):
     forum = get_object_or_404(Forum, id=id)
     
     if forum.name != request.user and not request.user.is_superuser:
-        return redirect('main:home') 
+        return redirect('forum_section:home') 
     
     if request.method == 'POST':
         form = ForumForm(request.POST, instance=forum)
         if form.is_valid():
             form.save()
-            return redirect('main:home') 
+            return redirect('forum_section:home') 
     else:
         form = ForumForm(instance=forum)
     
@@ -36,22 +36,20 @@ def edit_forum(request, id):
 
 
 
-@login_required(login_url="/login")
+@login_required
 def edit_discussion(request, id):
-    discussion = get_object_or_404(Discussion, id=id)
-    
-    if discussion.username != request.user and not request.user.is_superuser:
-        return redirect('main:home')  
-    
-    if request.method == 'POST':
+    discussion = get_object_or_404(Discussion, pk=id)
+
+    if request.method == "POST":
         form = DiscussionForm(request.POST, instance=discussion)
         if form.is_valid():
-            form.save()
-            return redirect('main:home')
+            discussion.discuss = form.cleaned_data.get('discuss')
+            discussion.save(update_fields=['discuss'])
+            return redirect('forum_section:home')
     else:
         form = DiscussionForm(instance=discussion)
-    
-    return render(request, 'editDiscussion.html', {'form': form, 'discussion' : discussion})
+
+    return render(request, "editDiscussion.html", {"form": form, "discussion": discussion})
 
 
 @login_required(login_url="/login")
@@ -95,7 +93,7 @@ def addInDiscussion(request, id):
         form_entry.username = request.user
         form_entry.forum = forum
         form_entry.save()
-        return redirect('main:home')
+        return redirect('forum_section:home')
 
     context = {
         'form': form,
@@ -124,7 +122,7 @@ def show_main(request):
 def delete_discussion(request, id):
     discussion = get_object_or_404(Discussion, pk=id, username=request.user)
     discussion.delete()
-    return redirect('main:home')
+    return redirect('forum_section:home')
 
 @require_POST
 
@@ -143,7 +141,7 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Your account has been successfully created!')
-            return redirect('main:login')
+            return redirect('forum_section:login')
     context = {'form':form}
     return render(request, 'register.html', context)
 
@@ -154,7 +152,7 @@ def login_user(request):
       if form.is_valid():
         user = form.get_user()
         login(request, user)
-        response = HttpResponseRedirect(reverse("main:show_main"))
+        response = HttpResponseRedirect(reverse("forum_section:show_main"))
         response.set_cookie('last_login', str(datetime.datetime.now()))
         return response
 
@@ -165,6 +163,6 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    response = HttpResponseRedirect(reverse('main:login'))
+    response = HttpResponseRedirect(reverse('forum_section:login'))
     response.delete_cookie('last_login')
     return response
