@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from .models import *
 from .forms import *
@@ -66,22 +66,23 @@ def home(request):
               'count':count,
               'discussions':discussions}
     return render(request,'home.html',context)
- 
+
+
+@login_required(login_url="/login")
 def addInForum(request):
-    form = ForumForm(request.POST or None)
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        form = ForumForm(request.POST)
+        if form.is_valid():
+            forum_entry = form.save(commit=False)
+            forum_entry.name = request.user
+            forum_entry.save()
+            return JsonResponse({"success": True, "message": "Forum added successfully!"})
+        else:
+            return JsonResponse({"success": False, "message": "Form is not valid."})
+    else:
+        form = ForumForm()
 
-    if form.is_valid() and request.method == 'POST':
-        form_entry = form.save(commit = False)
-        form_entry.name = request.user
-        form_entry.save()
-        return redirect('main:home')
-
-    context = {
-        'form': form
-    }
-
-    return render(request, "addInForum.html", context)
-
+    return render(request, "addInForum.html", {"form": form})
 
 
 @login_required(login_url="/login")
@@ -129,9 +130,10 @@ def delete_discussion(request, id):
 
 @login_required(login_url="/login")
 def delete_forum(request, id):
-    forum = get_object_or_404(Forum, pk=id,name=request.user )
+    forum = get_object_or_404(Forum, pk=id, name=request.user)
     forum.delete()
-    return redirect('main:home')
+    return JsonResponse({"success": True})
+
     
 def register(request):
     form = UserCreationForm()

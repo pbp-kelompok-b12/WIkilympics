@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Forums</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body class="bg-[#f9fafb] text-[#1f2937]">
+<body class="bg-[#2B4C9F] text-[#1f2937]">
   <section class="w-full bg-[#f3f4f6] border-b border-[#d1d5db]">
     <div class="container mx-auto px-4 py-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <h2 class="text-2xl font-semibold">
@@ -33,11 +34,12 @@
             <div class="flex items-justify justify-start gap-3 mb-3">
                 
                 {% if forum.name == request.user or request.user.is_superuser %}
-                <form method="POST" action="{% url 'main:delete_forum' forum.id %}" class="shrink-0">
+                <form id="deleteForumForm{{ forum.id }}" method="POST" action="{% url 'main:delete_forum' forum.id %}" class="shrink-0">
                     {% csrf_token %}
                     <button
-                    type="submit"
-                    class="px-3 py-1.5 rounded-md bg-[#dc2626] hover:bg-[#b91c1c] text-[#ffffff] text-sm font-medium shadow-sm transition whitespace">
+                    type="button"
+                    class="delete-button px-3 py-1.5 rounded-md bg-[#dc2626] hover:bg-[#b91c1c] text-[#ffffff] text-sm font-medium shadow-sm transition whitespace"
+                    data-forum-id="{{ forum.id }}">
                     Delete
                     </button>
                 </form>
@@ -150,7 +152,7 @@
               {% csrf_token %}
               <button
                 type="submit"
-                class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#2B4C9F] hover:bg-[#1D3A6D] text-[#ffffff] text-sm font-medium shadow-sm transition">
+                class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#FFC107] hover:bg-[#1D3A6D] text-[#2B4C9F] text-sm font-bold shadow-sm transition">
                 Reply
               </button>
             </form>
@@ -159,5 +161,29 @@
       {% endfor %}
     </div>
   </main>
+
+  <script>
+    $(document).ready(function() {
+      $('.delete-button').on('click', function(event) {
+        event.preventDefault();
+        var forumId = $(this).data('forum.id');
+        
+        $.ajax({
+          type: "POST",
+          url: "/forum/delete/" + forumId + "/",
+          data: {
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success: function(response) {
+            if (response.success) {
+              $('article[data-forum-id="' + forumId + '"]').remove();
+            } else {
+              alert('Error deleting the forum');
+            }
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
