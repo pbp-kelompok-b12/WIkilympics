@@ -18,17 +18,17 @@ def register(request):
 
 def login_user(request):
     if request.method == 'POST':
-         form = AuthenticationForm(data=request.POST)
-         if form.is_valid():
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('main:show_main')
-         
+            return redirect('upcoming_event:daftar_event')  # ✅ diarahkan ke halaman daftar event
     else:
         form = AuthenticationForm(request)
 
     context = {'form': form}
     return render(request, 'login.html', context)
+
 
 def logout_user(request):
     logout(request)
