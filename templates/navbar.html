@@ -68,13 +68,13 @@
             <div class="mb-4">
               <div class="font-medium text-[#1E3A8A]">{{ name|default:user.username }}</div>
             </div>
-            <a href="{% url 'main:logout' %}" class="block text-red-600 hover:text-red-700 font-medium py-3 transition-colors">
+            <a href="{% url 'forum_section:logout' %}" class="block text-red-600 hover:text-red-700 font-medium py-3 transition-colors">
               Logout
             </a>
           {% else %}
             <div class="space-y-3">
-              <a href="{% url 'main:login_user' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Login</a>
-              <a href="{% url 'main:register_user' %}" class="block bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-medium py-3 px-4 rounded text-center transition-colors">
+              <a href="{% url 'forum_section:login_user' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Login</a>
+              <a href="{% url 'forum_section:register_user' %}" class="block bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-medium py-3 px-4 rounded text-center transition-colors">
                 Register
               </a>
             </div>
