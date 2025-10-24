@@ -7,7 +7,7 @@
   <title>Add Reply</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-[#2B4C9F]">
   
   <header class="bg-[#2B4C9F] border-b-4 border-[#FFC107]">
     <div class="container mx-auto px-4 py-6 flex items-center justify-between">
@@ -23,7 +23,7 @@
 
   <main class="container mx-auto px-4 py-12 max-w-2xl">
 
-    <div class="bg-white rounded-lg shadow-lg border-2 border-[#2B4C9F] p-8">
+    <div class="bg-white rounded-lg shadow-lg border-4 border-[#FFC107] p-8">
       
       <form action="{% url 'forum_section:addInDiscussion' forum.id %}" method="POST" class="space-y-6">
         {% csrf_token %}

@@ -8,15 +8,12 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#2B4C9F] text-[#1f2937]">
-  <section class="w-full bg-[#f3f4f6] border-b border-[#d1d5db]">
-    <div class="container mx-auto px-4 py-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <h2 class="text-2xl font-semibold" id="forum-count">
-        Currently active forums: {{count}}
-      </h2>
+  <section class="w-full  bg-[#f3f4f6] border-b border-[#d1d5db]">
+    <div class="container mx-auto px-4 py-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-end">
       <form method="POST" action="{% url 'forum_section:addInForum' %}" class="flex">
         {% csrf_token %}
         <button
-          class="w-auto px-3 py-1.5 rounded-md bg-[#2B4C9F] hover:bg-[#1D3A6D] text-[#ffffff] text-sm font-medium shadow-sm transition"
+          class=" w-auto px-3 py-1.5 rounded-md bg-[#FFC107] hover:bg-[#bf8f00] text-[#2B4C9F] text-sm font-bold shadow-sm transition"
           type="submit">
           Add more
         </button>
@@ -149,7 +146,7 @@
               {% csrf_token %}
               <button
                 type="submit"
-                class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#FFC107] hover:bg-[#1D3A6D] text-[#2B4C9F] text-sm font-bold shadow-sm transition">
+                class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#FFC107] hover:bg-[#bf8f00] text-[#2B4C9F] text-sm font-bold shadow-sm transition">
                 Reply
               </button>
             </form>
