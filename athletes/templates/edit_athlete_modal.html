@@ -1,0 +1,185 @@
+<!-- Edit Modal -->
+<div id="editModal" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-[rgba(10,32,61,0.6)]">
+    <div id="editModalContent" class="bg-white rounded-lg shadow-lg w-5/6 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-screen overflow-y-auto border-t-4 border-[rgb(30,60,200)] transition-all duration-200 ease-out transform scale-95 opacity-0">
+      
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-[rgb(30,60,200)] rounded-t-lg">
+        <h3 class="text-xl font-semibold tracking-wide text-[rgb(255,255,0)]" style="font-family: 'Orbitron', sans-serif;">
+          Edit Olympic Athlete
+        </h3>
+        <button type="button" 
+                class="text-[rgb(255,255,0)] bg-transparent hover:bg-white hover:text-[rgb(30,60,200)] rounded-full text-sm p-1.5 ml-auto inline-flex items-center transition border border-white"
+                onclick="hideEditModal()">
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" 
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 
+                  4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 
+                  4.293a1 1 0 01-1.414-1.414L8.586 10 
+                  4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </div>
+  
+      <!-- Modal body -->
+      <div class="px-6 py-4 space-y-6">
+        <form id="editAthletesForm" class="form-style">
+          {% comment %} Hidden input for ID {% endcomment %}
+          <input type="hidden" id="edit_athlete_id" name="athlete_id">
+  
+          <div class="mb-4">
+            <label for="edit_athlete_name" class="block text-sm font-medium text-[rgb(10,32,61)]">Athlete Name</label>
+            <input type="text" id="edit_athlete_name" name="athlete_name"
+                   class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
+                   required>
+          </div>
+  
+          <div class="mb-4">
+            <label for="edit_athlete_photo" class="block text-sm font-medium text-[rgb(10,32,61)]">Athlete Photo URL</label>
+            <input type="url" id="edit_athlete_photo" name="athlete_photo"
+                   class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]">
+          </div>
+  
+          <div class="mb-4">
+            <label for="edit_country" class="block text-sm font-medium text-[rgb(10,32,61)]">Country</label>
+            <input type="text" id="edit_country" name="country"
+                   class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
+                   required>
+          </div>
+  
+          <div class="mb-4">
+            <label for="edit_country_flag" class="block text-sm font-medium text-[rgb(10,32,61)]">Country Flag URL</label>
+            <input type="url" id="edit_country_flag" name="country_flag"
+                   class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]">
+          </div>
+  
+          <div class="mb-4">
+            <label for="edit_sport" class="block text-sm font-medium text-[rgb(10,32,61)]">Sport</label>
+            <select id="edit_sport" name="sport"
+                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]">
+              <option value="swimming">Swimming</option>
+              <option value="athletics">Athletics</option>
+              <option value="gymnastics">Gymnastics</option>
+              <option value="basketball">Basketball</option>
+              <option value="football">Football</option>
+              <option value="tennis">Tennis</option>
+              <option value="boxing">Boxing</option>
+              <option value="weightlifting">Weightlifting</option>
+            </select>
+          </div>
+  
+          <div class="mb-4">
+            <label for="edit_date_of_birth" class="block text-sm font-medium text-[rgb(10,32,61)]">Date of Birth</label>
+            <input type="date" id="edit_date_of_birth" name="date_of_birth"
+                   class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]">
+          </div>
+  
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="edit_height" class="block text-sm font-medium text-[rgb(10,32,61)]">Height (cm)</label>
+              <input type="number" id="edit_height" name="height" step="0.01"
+                     class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]">
+            </div>
+            <div>
+              <label for="edit_weight" class="block text-sm font-medium text-[rgb(10,32,61)]">Weight (kg)</label>
+              <input type="number" id="edit_weight" name="weight" step="0.01"
+                     class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]">
+            </div>
+          </div>
+  
+          <div class="mb-4">
+            <label for="edit_biography" class="block text-sm font-medium text-[rgb(10,32,61)]">Biography</label>
+            <textarea id="edit_biography" name="biography" rows="4"
+                      class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"></textarea>
+          </div>
+  
+          <div class="mb-4">
+            <label for="edit_achievements" class="block text-sm font-medium text-[rgb(10,32,61)]">Achievements</label>
+            <textarea id="edit_achievements" name="achievements" rows="3"
+                      class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"></textarea>
+          </div>
+        </form>
+      </div>
+  
+      <!-- Modal footer -->
+      <div class="flex flex-col sm:flex-row gap-4 p-6 border-t border-gray-200 rounded-b-lg bg-[rgb(30,60,200)]">
+        <button type="button" 
+                class="order-2 sm:order-1 px-6 py-3 border-2 border-white text-white rounded-md font-medium hover:bg-red-600 hover:text-white transition-all text-center transform scale-100 hover:scale-105"
+                onclick="hideEditModal()">
+          Cancel
+        </button>
+
+        <button type="submit" form="editAthletesForm" id="saveEditButton" class="order-1 sm:order-2 flex-1 bg-white text-[rgb(30,60,200)] px-6 py-3 rounded-md font-semibold hover:bg-[rgb(255,255,0)] hover:text-[rgb(30,60,200)] transition-all transform scale-100 hover:scale-105 border-2 border-white shadow-md">
+          Save Changes
+        </button>
+      </div>
+    </div>
+</div>
+  
+<script>
+    function showEditModal() {
+      const modal = document.getElementById('editModal');
+      const modalContent = document.getElementById('editModalContent');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modalContent.classList.remove('opacity-0', 'scale-95');
+        modalContent.classList.add('opacity-100', 'scale-100');
+      }, 50);
+    }
+  
+    function hideEditModal() {
+      const modal = document.getElementById('editModal');
+      const modalContent = document.getElementById('editModalContent');
+      modalContent.classList.remove('opacity-100', 'scale-100');
+      modalContent.classList.add('opacity-0', 'scale-95');
+      setTimeout(() => modal.classList.add('hidden'), 150);
+    }
+  
+    async function setupEditModal(athleteId) {
+      try {
+        const res = await fetch(`/athletes/json/${athleteId}/`);
+        if (!res.ok) throw new Error('Failed to load athlete data');
+        const athlete = await res.json();
+  
+        document.getElementById('edit_athlete_id').value = athlete.id;
+        document.getElementById('edit_athlete_name').value = athlete.athlete_name || '';
+        document.getElementById('edit_athlete_photo').value = athlete.athlete_photo || '';
+        document.getElementById('edit_country').value = athlete.country || '';
+        document.getElementById('edit_country_flag').value = athlete.country_flag || '';
+        document.getElementById('edit_sport').value = athlete.sport || 'swimming';
+        document.getElementById('edit_date_of_birth').value = athlete.date_of_birth || '';
+        document.getElementById('edit_height').value = athlete.height || '';
+        document.getElementById('edit_weight').value = athlete.weight || '';
+        document.getElementById('edit_biography').value = athlete.biography || '';
+        document.getElementById('edit_achievements').value = athlete.achievements || '';
+  
+        showEditModal();
+      } catch (err) {
+        console.error(err);
+        alert('Failed to load athlete data.');
+      }
+    }
+  
+    document.getElementById("editAthletesForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const athleteId = document.getElementById("edit_athlete_id").value;
+      const formData = new FormData(this);
+  
+      try {
+        const res = await fetch(`/athletes/edit-athlete-ajax/${athleteId}/`, {
+          method: "POST",
+          body: formData,
+        });
+  
+        const data = await res.json();
+        if (data.status === "success") {
+          hideEditModal();
+          document.dispatchEvent(new CustomEvent('athleteEdited'));
+        } else {
+          alert('Failed to edit data: ' + JSON.stringify(data.errors || data.message));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error occurred while saving data.");
+      }
+    });
+</script>

@@ -17,8 +17,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
+from main.views import register, login_user, logout_user
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('main.urls')),
+    path('register/', register, name='register_user'),
+    path('login/', login_user, name='login_user'),
+    path('logout/', logout_user, name='logout'),
+    path('athletes/', include('athletes.urls')),
+    path('', RedirectView.as_view(pattern_name='athletes:show_main')),
 ]
