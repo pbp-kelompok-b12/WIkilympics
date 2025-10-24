@@ -21,12 +21,34 @@
     <!-- Modal body -->
     <div class="px-6 py-4 space-y-6">
       <form id="athletesForm" class="form-style">
+        {% csrf_token %}
         
         <div class="mb-4">
-          <label for="athlete_name" class="block text-sm font-medium text-[rgb(10,32,61)]">Athlete Name</label>
+          <label for="athlete_name" class="block text-sm font-medium text-[rgb(10,32,61)]">Athlete Name *</label>
           <input type="text" id="athlete_name" name="athlete_name"
                  class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
                  placeholder="Enter athlete name" required>
+        </div>
+
+        <div class="mb-4">
+          <label for="country" class="block text-sm font-medium text-[rgb(10,32,61)]">Country *</label>
+          <input type="text" id="country" name="country"
+                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
+                 placeholder="Enter country" required>
+        </div>
+
+        <div class="mb-4">
+          <label for="sport" class="block text-sm font-medium text-[rgb(10,32,61)]">Sport *</label>
+          <input type="text" id="sport" name="sport"
+                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
+                 placeholder="Enter sport" required>
+        </div>
+
+        <div class="mb-4">
+          <label for="biography" class="block text-sm font-medium text-[rgb(10,32,61)]">Biography *</label>
+          <textarea id="biography" name="biography" rows="4"
+                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
+                    placeholder="Enter athlete biography" required></textarea>
         </div>
 
         <div class="mb-4">
@@ -36,83 +58,17 @@
                  placeholder="https://example.com/photo.jpg">
         </div>
 
-        <div class="mb-4">
-          <label for="country" class="block text-sm font-medium text-[rgb(10,32,61)]">Country</label>
-          <input type="text" id="country" name="country"
-                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
-                 placeholder="Enter country" required>
-        </div>
-
-        <div class="mb-4">
-          <label for="country_flag" class="block text-sm font-medium text-[rgb(10,32,61)]">Country Flag URL</label>
-          <input type="url" id="country_flag" name="country_flag"
-                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
-                 placeholder="https://example.com/flag.jpg">
-        </div>
-
-        <div class="mb-4">
-          <label for="sport" class="block text-sm font-medium text-[rgb(10,32,61)]">Sport</label>
-          <select id="sport" name="sport"
-                  class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
-                  required>
-            <option value="">Select Sport</option>
-            <option value="swimming">Swimming</option>
-            <option value="athletics">Athletics</option>
-            <option value="gymnastics">Gymnastics</option>
-            <option value="basketball">Basketball</option>
-            <option value="football">Football</option>
-            <option value="tennis">Tennis</option>
-            <option value="boxing">Boxing</option>
-            <option value="weightlifting">Weightlifting</option>
-          </select>
-        </div>
-
-        <div class="mb-4">
-          <label for="date_of_birth" class="block text-sm font-medium text-[rgb(10,32,61)]">Date of Birth</label>
-          <input type="date" id="date_of_birth" name="date_of_birth"
-                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]">
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label for="height" class="block text-sm font-medium text-[rgb(10,32,61)]">Height (cm)</label>
-            <input type="number" id="height" name="height" step="0.01"
-                   class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
-                   placeholder="Height">
-          </div>
-          <div>
-            <label for="weight" class="block text-sm font-medium text-[rgb(10,32,61)]">Weight (kg)</label>
-            <input type="number" id="weight" name="weight" step="0.01"
-                   class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
-                   placeholder="Weight">
-          </div>
-        </div>
-
-        <div class="mb-4">
-          <label for="biography" class="block text-sm font-medium text-[rgb(10,32,61)]">Biography</label>
-          <textarea id="biography" name="biography" rows="4"
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
-                    placeholder="Enter athlete biography" required></textarea>
-        </div>
-
-        <div class="mb-4">
-          <label for="achievements" class="block text-sm font-medium text-[rgb(10,32,61)]">Achievements</label>
-          <textarea id="achievements" name="achievements" rows="3"
-                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-[rgb(45,94,140)] focus:border-[rgb(45,94,140)]"
-                    placeholder="Enter athlete achievements"></textarea>
-        </div>
-
       </form>
     </div>
 
     <!-- Modal footer -->
     <div class="flex flex-col sm:flex-row gap-4 p-6 border-t border-gray-200 rounded-b-lg bg-[rgb(30,60,200)]">
-      <button type="button" id="cancelButton" class="order-2 sm:order-1 px-6 py-3 border-2 border-white text-white rounded-md font-medium hover:bg-red-600 hover:text-white transition-all text-center transform scale-100 hover:scale-105"
+      <button type="button" class="order-2 sm:order-1 px-6 py-3 border-2 border-white text-white rounded-md font-medium hover:bg-red-600 hover:text-white transition-all text-center transform scale-100 hover:scale-105"
         onclick="hideModal()">
         Cancel
       </button>
 
-      <button type="submit" id="submitAthletes" form="athletesForm" class="order-1 sm:order-2 flex-1 bg-white text-[rgb(30,60,200)] px-6 py-3 rounded-md font-semibold hover:bg-[rgb(255,255,0)] hover:text-[rgb(30,60,200)] transition-all transform scale-100 hover:scale-105 border-2 border-white shadow-md">
+      <button type="submit" form="athletesForm" class="order-1 sm:order-2 flex-1 bg-white text-[rgb(30,60,200)] px-6 py-3 rounded-md font-semibold hover:bg-[rgb(255,255,0)] hover:text-[rgb(30,60,200)] transition-all transform scale-100 hover:scale-105 border-2 border-white shadow-md">
         Add Athlete
       </button>
     </div>
@@ -123,43 +79,42 @@
     function showModal() {
         const modal = document.getElementById('crudModal');
         const modalContent = document.getElementById('crudModalContent');
-  
-        modal.classList.remove('hidden'); 
+        modal.classList.remove('hidden');
         setTimeout(() => {
-          modalContent.classList.remove('opacity-0', 'scale-95');
-          modalContent.classList.add('opacity-100', 'scale-100');
-        }, 50); 
+            modalContent.classList.remove('opacity-0', 'scale-95');
+            modalContent.classList.add('opacity-100', 'scale-100');
+        }, 50);
     }
-  
+
     function hideModal() {
         const modal = document.getElementById('crudModal');
         const modalContent = document.getElementById('crudModalContent');
-  
         modalContent.classList.remove('opacity-100', 'scale-100');
         modalContent.classList.add('opacity-0', 'scale-95');
-  
-        setTimeout(() => {
-          modal.classList.add('hidden');
-        }, 150); 
+        setTimeout(() => modal.classList.add('hidden'), 150);
     }
 
-    async function addAthleteEntry() {
-        await fetch("{% url 'athletes:create_athlete_entry_ajax' %}", {
-            method: "POST",
-            body: new FormData(document.querySelector('#athletesForm')),
-        });
-
-        document.getElementById("athletesForm").reset();
-        hideModal();
-
-        document.dispatchEvent(new CustomEvent('athleteAdded'));
-
-        return false;
-    }
-
-    document.getElementById("athletesForm").addEventListener("submit", function(e) {
+    document.getElementById("athletesForm").addEventListener("submit", async function(e) {
         e.preventDefault();
-        addAthleteEntry();
-    });
+        const formData = new FormData(this);
 
+        try {
+            const res = await fetch("{% url 'athletes:create_athlete_entry_ajax' %}", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+            if (data.status === "success") {
+                hideModal();
+                alert("Athlete added successfully!");
+                window.location.reload();
+            } else {
+                alert('Failed to add athlete: ' + data.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error occurred while adding athlete.");
+        }
+    });
 </script>

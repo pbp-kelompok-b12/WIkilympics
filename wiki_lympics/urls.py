@@ -25,6 +25,6 @@ urlpatterns = [
     path('register/', register, name='register_user'),
     path('login/', login_user, name='login_user'),
     path('logout/', logout_user, name='logout'),
-    path('athletes/', include('athletes.urls')),
     path('', RedirectView.as_view(pattern_name='athletes:show_main')),
+    path('athletes/', include('athletes.urls')),
 ]

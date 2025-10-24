@@ -11,9 +11,9 @@ from django.contrib.auth.decorators import login_required
 def show_main(request):
     athletes_list = Athletes.objects.all()
     
-    sport_filter = request.GET.get('sport')  # filter berdasarkan sport
-    country_filter = request.GET.get('country')  # filter berdasarkan country
-    query = request.GET.get('q')  # search berdasarkan athlete_name
+    sport_filter = request.GET.get('sport')
+    country_filter = request.GET.get('country')
+    query = request.GET.get('q')
 
     if sport_filter and sport_filter != '':
         athletes_list = athletes_list.filter(sport=sport_filter)
@@ -24,41 +24,34 @@ def show_main(request):
     if query and query != '':
         athletes_list = athletes_list.filter(athlete_name__icontains=query)
 
+    sports_choices = Athletes.objects.values_list('sport', flat=True).distinct()
+    
     context = {
         'athletes_list': athletes_list,
         'selected_sport': sport_filter or '',
         'selected_country': country_filter or '',
         'search_query': query or '',
-        'sports': dict(Athletes.SPORT_CHOICES),
+        'sports': {sport: sport for sport in sports_choices},
     }
 
     return render(request, "athletes.html", context)
 
 def create_athlete(request):
     form = AthletesForm(request.POST or None)
-
     if form.is_valid() and request.method == "POST":
         form.save()
         return redirect('athletes:show_main')
-
-    context = {
-        'form': form
-    }
+    context = {'form': form}
     return render(request, "create_athlete.html", context)
 
 def show_athlete(request, id):
     athlete = get_object_or_404(Athletes, pk=id)
-
-    context = {
-        'athlete': athlete
-    }
-    
+    context = {'athlete': athlete}
     return render(request, "athlete_detail.html", context)
 
 def show_json(request):
     athletes_list = Athletes.objects.all()    
-    json_data = serializers.serialize("json", athletes_list)
-    return HttpResponse(json_data, content_type="application/json")
+    return HttpResponse(serializers.serialize("json", athletes_list), content_type="application/json")
 
 def show_json_by_id(request, athlete_id):
     try:
@@ -68,13 +61,8 @@ def show_json_by_id(request, athlete_id):
             'athlete_name': athlete.athlete_name,
             'athlete_photo': athlete.athlete_photo,
             'country': athlete.country,
-            'country_flag': athlete.country_flag,
             'sport': athlete.sport,
             'biography': athlete.biography,
-            'date_of_birth': athlete.date_of_birth.strftime('%Y-%m-%d') if athlete.date_of_birth else '',
-            'height': str(athlete.height) if athlete.height else '',
-            'weight': str(athlete.weight) if athlete.weight else '',
-            'achievements': athlete.achievements,
         }
         return JsonResponse(data)
     except Athletes.DoesNotExist:
@@ -86,10 +74,7 @@ def edit_athlete(request, id):
     if form.is_valid() and request.method == 'POST':
         form.save()
         return redirect('athletes:show_main')
-
-    context = {
-        'form': form
-    }
+    context = {'form': form}
     return render(request, "edit_athlete.html", context)
 
 def delete_athlete(request, id):
@@ -100,33 +85,27 @@ def delete_athlete(request, id):
 @csrf_exempt
 @require_POST
 def create_athlete_entry_ajax(request):
-    athlete_name = request.POST.get("athlete_name")
-    athlete_photo = request.POST.get("athlete_photo")
-    country = request.POST.get("country")
-    country_flag = request.POST.get("country_flag")
-    sport = request.POST.get("sport")
-    biography = request.POST.get("biography")
-    date_of_birth = request.POST.get("date_of_birth")
-    height = request.POST.get("height")
-    weight = request.POST.get("weight")
-    achievements = request.POST.get("achievements")
+    if request.method == 'POST':
+        try:
+            athlete_name = request.POST.get("athlete_name")
+            athlete_photo = request.POST.get("athlete_photo")
+            country = request.POST.get("country")
+            sport = request.POST.get("sport")
+            biography = request.POST.get("biography")
 
-    new_athlete = Athletes(
-        athlete_name=athlete_name,
-        athlete_photo=athlete_photo,
-        country=country,
-        country_flag=country_flag,
-        sport=sport,
-        biography=biography,
-        date_of_birth=date_of_birth if date_of_birth else None,
-        height=height if height else None,
-        weight=weight if weight else None,
-        achievements=achievements,
-    )
+            new_athlete = Athletes(
+                athlete_name=athlete_name,
+                athlete_photo=athlete_photo,
+                country=country,
+                sport=sport,
+                biography=biography,
+            )
+            new_athlete.save()
 
-    new_athlete.save()
-
-    return HttpResponse(b"CREATED", status=201)
+            return JsonResponse({"status": "success", "message": "Athlete added successfully!"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+    return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
 
 @csrf_exempt
 def edit_athlete_entry_ajax(request, id):

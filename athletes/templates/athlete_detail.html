@@ -25,12 +25,9 @@
             </h1>
             <div class="flex items-center space-x-4">
                 <span class="bg-[rgb(255,255,0)] text-[rgb(30,60,200)] px-3 py-1 rounded-full font-bold text-sm">
-                    {{ athlete.get_sport_display }}
+                    {{ athlete.sport }}
                 </span>
                 <span class="text-white flex items-center">
-                    {% if athlete.country_flag %}
-                        <img src="{{ athlete.country_flag }}" alt="{{ athlete.country }}" class="w-6 h-4 mr-2 rounded-sm shadow">
-                    {% endif %}
                     {{ athlete.country }}
                 </span>
             </div>
@@ -54,37 +51,16 @@
                 Personal Information
             </h2>
             <ul class="space-y-3 text-gray-800">
-                <li><span class="font-semibold text-[rgb(40,80,200)]">Sport:</span> {{ athlete.get_sport_display }}</li>
+                <li><span class="font-semibold text-[rgb(40,80,200)]">Sport:</span> {{ athlete.sport }}</li>
                 <li><span class="font-semibold text-[rgb(40,80,200)]">Country:</span> {{ athlete.country }}</li>
-                {% if athlete.date_of_birth %}
-                <li><span class="font-semibold text-[rgb(40,80,200)]">Date of Birth:</span> {{ athlete.date_of_birth }}</li>
-                {% endif %}
-                {% if athlete.height %}
-                <li><span class="font-semibold text-[rgb(40,80,200)]">Height:</span> {{ athlete.height }} cm</li>
-                {% endif %}
-                {% if athlete.weight %}
-                <li><span class="font-semibold text-[rgb(40,80,200)]">Weight:</span> {{ athlete.weight }} kg</li>
-                {% endif %}
             </ul>
         </div>
 
-        <!-- Achievements -->
-        <div class="bg-[rgb(255,255,120)] rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow border-2 border-[rgb(255,255,90)]"> 
-            <h2 class="text-2xl font-bold text-[rgb(30,60,180)] mb-4">
-                Achievements
-            </h2>
-            {% if athlete.achievements %}
-                <p class="text-[rgb(30,60,180)]">{{ athlete.achievements|linebreaks }}</p>
-            {% else %}
-                <p class="text-[rgb(30,60,180)] italic">No achievements recorded yet.</p>
-            {% endif %}
+        <!-- Biography -->
+        <div class="bg-[rgb(20,45,160)] text-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all border-2 border-[rgb(255,255,150)]">
+            <h2 class="text-2xl font-bold mb-4 text-[rgb(255,255,100)]">Biography</h2>
+            <p class="leading-relaxed text-justify">{{ athlete.biography|linebreaks }}</p>
         </div>
-    </div>
-
-    <!-- Biography -->
-    <div class="bg-[rgb(20,45,160)] text-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all border-2 border-[rgb(255,255,150)]">
-        <h2 class="text-2xl font-bold mb-4 text-[rgb(255,255,100)]">Biography</h2>
-        <p class="leading-relaxed text-justify">{{ athlete.biography|linebreaks }}</p>
     </div>
 
 </div>

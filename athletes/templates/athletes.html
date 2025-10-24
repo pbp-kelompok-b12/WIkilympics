@@ -47,16 +47,17 @@
                     onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';">
                     <option value="">All Sports</option>
                     {% for key, value in sports.items %}
-                        <option value="{{ key }}">{{ value }}</option>
+                        <option value="{{ key }}" {% if selected_sport == key %}selected{% endif %}>{{ value }}</option>
                     {% endfor %}
                 </select>
 
                 <input type="text" id="countryFilter" placeholder="Filter by country..." 
                     class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
                     onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)';"
-                    onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';">
+                    onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';"
+                    value="{{ selected_country }}">
 
-                {% if user.is_authenticated and user.username == "admin" %}
+                {% if user.is_authenticated and user.is_staff %}
                 <button onclick="showModal()" 
                     class="flex items-center justify-center w-12 h-12 rounded-full shadow-md transition-all duration-200"
                     style="background-color: rgb(255,255,0); color: rgb(30,60,200); outline: 2px solid white;"
@@ -117,6 +118,10 @@
 
     document.addEventListener("athleteEdited", function() {
         updateFilters();
+    });
+
+    document.addEventListener("athleteDeleted", function() {
+        location.reload();
     });
 
 </script>

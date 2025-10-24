@@ -22,7 +22,7 @@
 
     <!-- Sport badge -->
     <div class="absolute top-3 left-3 bg-[rgb(255,255,0)] text-[rgb(30,60,200)] px-2 py-1 rounded-full text-xs font-bold">
-        {{ athlete.get_sport_display }}
+        {{ athlete.sport }}
     </div>
 
     <!-- Details overlay (appear on hover) -->
@@ -30,7 +30,8 @@
         <div>
             <h3 class="text-xl font-bold">{{ athlete.athlete_name }}</h3>
             <p class="text-sm mt-1">{{ athlete.country }}</p>
-            <p class="text-sm text-[rgb(255,255,0)]">{{ athlete.get_sport_display }}</p>
+            <p class="text-sm text-[rgb(255,255,0)]">{{ athlete.sport }}</p>
+            <p class="text-xs mt-2 line-clamp-3">{{ athlete.biography|truncatewords:20 }}</p>
         </div>              
         <a href="{% url 'athletes:show_athlete' athlete.id %}" 
             class="mt-4 inline-block px-4 py-2 rounded-full font-semibold transition-all duration-200 shadow-md w-max"
@@ -42,7 +43,7 @@
     </div>
 
     <!-- Admin Buttons (Edit & Delete) -->
-    {% if user.is_authenticated and user.username == "admin" %}
+    {% if user.is_authenticated and user.is_staff %}
     <div class="absolute top-3 right-3 flex space-x-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <!-- Edit button -->
         <a href="javascript:void(0);" 

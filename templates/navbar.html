@@ -3,16 +3,16 @@
       <div class="flex items-center justify-between h-20">
         <!-- Logo -->
         <div class="flex items-center">
-          <a href="{% url 'athletes:show_main' %}" class="text-3xl font-extrabold text-[#1E3A8A] tracking-wide select-none" style="font-family: 'Orbitron', sans-serif;">
+          <h1 class="text-3xl font-extrabold text-[#1E3A8A] tracking-wide select-none" style="font-family: 'Orbitron', sans-serif;">
             WIkilympics
-          </a>
+          </h1>
         </div>
   
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-12 text-[#1E3A8A]">
-          <a href="{% url 'athletes:show_main' %}" class="font-bold hover:text-[#1E40AF] transition-colors">Home</a>
+          <a href="/" class="font-bold hover:text-[#1E40AF] transition-colors">Home</a>
           <a href="{% url 'athletes:show_main' %}" class="font-medium hover:text-[#1E40AF] transition-colors">Athletes</a>
-          <!-- <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Sports</a> -->
+          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Sports</a>
           <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Upcoming Events</a>
           <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Sports Article</a>
           <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Forum & Review Pages</a>
@@ -22,17 +22,16 @@
         <div class="hidden md:flex items-center space-x-6">
           {% if user.is_authenticated %}
             <div class="text-right">
-              <div class="text-sm font-medium text-[#1E3A8A]">{{ user.username }}</div>
-              <div class="text-xs text-gray-500">Welcome back!</div>
+              <div class="text-sm font-medium text-[#1E3A8A]">{{ name|default:user.username }}</div>
             </div>
-            <a href="{% url 'logout' %}" class="text-red-600 hover:text-red-700 font-medium transition-colors">
+            <a href="/logout/" class="text-red-600 hover:text-red-700 font-medium transition-colors">
               Logout
             </a>
           {% else %}
-            <a href="{% url 'login_user' %}" class="text-[#1E3A8A] hover:text-[#1E40AF] font-medium transition-colors">
+            <a href="/login/" class="text-[#1E3A8A] hover:text-[#1E40AF] font-medium transition-colors">
               Login
             </a>
-            <a href="{% url 'register_user' %}" class="bg-[#1E3A8A] hover:bg-[#1E40AF] text-white px-4 py-2 rounded font-medium transition-colors">
+            <a href="/register/" class="bg-[#1E3A8A] hover:bg-[#1E40AF] text-white px-4 py-2 rounded font-medium transition-colors">
               Register
             </a>
           {% endif %}
@@ -56,9 +55,9 @@
     <div class="mobile-menu hidden md:hidden bg-white border-t border-gray-200">
       <div class="px-6 py-4 space-y-4 text-[#1E3A8A]">
         <div class="space-y-1">
-          <a href="{% url 'athletes:show_main' %}" class="block font-bold py-3 hover:text-[#1E40AF] transition-colors">Home</a>
+          <a href="/" class="block font-bold py-3 hover:text-[#1E40AF] transition-colors">Home</a>
           <a href="{% url 'athletes:show_main' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Athletes</a>
-          <!-- <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports</a> -->
+          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports</a>
           <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Upcoming Events</a>
           <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports Article</a>
           <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Forum & Review Pages</a>
@@ -67,16 +66,15 @@
         <div class="border-t border-gray-200 pt-4">
           {% if user.is_authenticated %}
             <div class="mb-4">
-              <div class="font-medium text-[#1E3A8A]">{{ user.username }}</div>
-              <div class="text-sm text-gray-500">Welcome back!</div>
+              <div class="font-medium text-[#1E3A8A]">{{ name|default:user.username }}</div>
             </div>
-            <a href="{% url 'logout' %}" class="block text-red-600 hover:text-red-700 font-medium py-3 transition-colors">
+            <a href="/logout/" class="block text-red-600 hover:text-red-700 font-medium py-3 transition-colors">
               Logout
             </a>
           {% else %}
             <div class="space-y-3">
-              <a href="{% url 'login_user' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Login</a>
-              <a href="{% url 'register_user' %}" class="block bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-medium py-3 px-4 rounded text-center transition-colors">
+              <a href="/login/" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Login</a>
+              <a href="/register/" class="block bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-medium py-3 px-4 rounded text-center transition-colors">
                 Register
               </a>
             </div>
@@ -91,6 +89,3 @@
       btn.addEventListener("click", () => menu.classList.toggle("hidden"));
     </script>
   </nav>
-  
-  <!-- Tambahkan link font di dalam <head> -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&display=swap" rel="stylesheet">

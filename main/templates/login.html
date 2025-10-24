@@ -13,7 +13,6 @@
         <p class="text-gray-500">Sign in to continue your journey with <span class="text-green-600 font-semibold">WIkilympics</span></p>
       </div>
 
-      <!-- Form Errors Display -->
       {% if form.non_field_errors %}
         <div class="mb-6">
           {% for error in form.non_field_errors %}
@@ -70,7 +69,6 @@
         </button>
       </form>
 
-      <!-- Messages Display -->
       {% if messages %}
         <div class="mt-6">
           {% for message in messages %}
@@ -94,7 +92,7 @@
       <div class="mt-8 text-center pt-6 border-t border-gray-200">
         <p class="text-gray-600 text-sm">
           Don't have an account? 
-          <a href="{% url 'main:register_user' %}" class="text-green-600 hover:text-green-700 font-medium transition">
+          <a href="/register/" class="text-green-600 hover:text-green-700 font-medium transition">
             Register Now
           </a>
         </p>
