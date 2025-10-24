@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex flex-col items-center py-10">
+  <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">
+      Edit Event
+    </h1>
+
+    <form id="editEventForm" method="post" enctype="multipart/form-data" class="space-y-5">
+      {% csrf_token %}
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Nama Event:</label>
+        <input type="text" name="name" value="{{ event.name }}" required class="w-full border border-gray-300 rounded-lg p-2">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Penyelenggara:</label>
+        <input type="text" name="organizer" value="{{ event.organizer }}" required class="w-full border border-gray-300 rounded-lg p-2">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Tanggal Pelaksanaan:</label>
+        <input type="date" name="date" value="{{ event.date|date:'Y-m-d' }}" required class="w-full border border-gray-300 rounded-lg p-2">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Lokasi:</label>
+        <input type="text" name="location" value="{{ event.location }}" required class="w-full border border-gray-300 rounded-lg p-2">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Cabang Olahraga:</label>
+        <input type="text" name="sport_branch" value="{{ event.sport_branch }}" required class="w-full border border-gray-300 rounded-lg p-2">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Foto (opsional):</label>
+        <input type="url" name="image_url" value="{{ event.image_url }}" placeholder="https://example.com/gambar.jpg" class="w-full border border-gray-300 rounded-lg p-2">
+      </div>
+
+      <div class="flex justify-between items-center pt-4">
+        <a href="{% url 'upcoming_event:daftar_event' %}" class="text-gray-600 hover:text-gray-500 text-sm">
+          ← Back to Home
+        </a>
+        <button type="submit" class="bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-semibold py-2 px-5 rounded-lg shadow-md transition">
+        Save Changes
+      </button>
+      </div>
+    </form>
+
+    <p id="message" class="mt-4 text-center text-sm font-medium"></p>
+  </div>
+</div>
+
+<!-- Tambahkan toast.js biasa, bukan module -->
+<script src="{% static 'upcoming_event/js/toast.js' %}"></script>
+<script>
+  document.getElementById("editEventForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const response = await fetch(window.location.href, {
+      method: "POST",
+      headers: { "X-CSRFToken": csrfToken },
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      showToast("✅ Event berhasil diperbarui!");
+      setTimeout(() => {
+        window.location.href = "{% url 'upcoming_event:daftar_event' %}";
+      }, 1200);
+    } else {
+      showToast("❌ " + (data.message || "Gagal memperbarui event."), "error");
+    }
+  });
+</script>
+{% endblock %}
