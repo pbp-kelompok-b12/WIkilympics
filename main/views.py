@@ -11,28 +11,28 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Your account has been successfully created!')
-            return redirect('main:login_user')
+            return redirect('main:login')
         
     context = {'form':form}
     return render(request, 'register.html', context)
 
 def login_user(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
+         form = AuthenticationForm(data=request.POST)
+         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('upcoming_event:daftar_event')  # ✅ diarahkan ke halaman daftar event
+            return redirect('main:show_main')
+         
     else:
         form = AuthenticationForm(request)
 
     context = {'form': form}
     return render(request, 'login.html', context)
 
-
 def logout_user(request):
     logout(request)
-    return redirect('main:login_user')
+    return redirect('main:login')
 
 # TODO
 # line 26, redirect ke tempat yang benar
