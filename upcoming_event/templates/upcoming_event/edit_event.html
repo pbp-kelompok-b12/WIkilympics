@@ -41,6 +41,12 @@
         <input type="url" name="image_url" value="{{ event.image_url }}" placeholder="https://example.com/gambar.jpg" class="w-full border border-gray-300 rounded-lg p-2">
       </div>
 
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Deskripsi:</label>
+        <textarea name="description" rows="4" placeholder="Write the description about the event here."
+          class="w-full border border-gray-300 rounded-lg p-2">{{ event.description }}</textarea>
+      </div>
+
       <div class="flex justify-between items-center pt-4">
         <a href="{% url 'upcoming_event:daftar_event' %}" class="text-gray-600 hover:text-gray-500 text-sm">
           ← Back to Home
