@@ -117,6 +117,21 @@ class EditForumViewTest(TestCase):
         self.forum.refresh_from_db()
         self.assertEqual(self.forum.topic, 'Updated Forum')
         self.assertRedirects(response, reverse('forum_section:home'))
+        
+    def test_edit_forum_post_invalid(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('forum_section:edit_forum', args=[self.forum.id]),
+            {'topic': '', 'description': ''}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'editForum.html')
+
+    def test_edit_forum_superuser_access(self):
+        superuser = User.objects.create_superuser('admin', 'admin@test.com', 'adminpass123')
+        self.client.login(username='admin', password='adminpass123')
+        response = self.client.get(reverse('forum_section:edit_forum', args=[self.forum.id]))
+        self.assertEqual(response.status_code, 200)
 
 
 class EditDiscussionViewTest(TestCase):
@@ -144,6 +159,24 @@ class EditDiscussionViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'editDiscussion.html')
 
+    def test_edit_discussion_post_valid(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('forum_section:edit_discussion', args=[self.discussion.id]),
+            {'discuss': 'Updated discussion content', 'forum': self.forum.id}
+        )
+        self.discussion.refresh_from_db()
+        self.assertEqual(self.discussion.discuss, 'Updated discussion content')
+        self.assertRedirects(response, reverse('forum_section:home'))
+
+    def test_edit_discussion_post_invalid(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('forum_section:edit_discussion', args=[self.discussion.id]),
+            {'discuss': ''}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'editDiscussion.html')
 
 class AddInForumViewTest(TestCase):
     def setUp(self):
@@ -175,6 +208,27 @@ class AddInForumViewTest(TestCase):
         data = json.loads(response.content)
         self.assertTrue(data['success'])
         self.assertEqual(Forum.objects.count(), 1)
+        
+    def test_add_forum_post_invalid(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('forum_section:addInForum'),
+            {'topic': '', 'description': ''},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        data = json.loads(response.content)
+        self.assertFalse(data['success'])
+
+    def test_add_forum_non_ajax_post(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('forum_section:addInForum'),
+            {'topic': 'New Forum', 'description': 'Description'}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'addInForum.html')
+        
+        
 
 
 class AddInDiscussionViewTest(TestCase):
@@ -208,6 +262,20 @@ class AddInDiscussionViewTest(TestCase):
         )
         self.assertEqual(Discussion.objects.count(), 1)
         self.assertRedirects(response, reverse('forum_section:home'))
+        
+    def test_add_discussion_post_invalid(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('forum_section:addInDiscussion', args=[self.forum.id]),
+            {'discuss': ''}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'addInDiscussion.html')
+
+    def test_add_discussion_invalid_forum(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(reverse('forum_section:addInDiscussion', args=[999]))
+        self.assertEqual(response.status_code, 404)
 
 
 class DeleteForumViewTest(TestCase):
@@ -276,6 +344,16 @@ class RegisterViewTest(TestCase):
         })
         self.assertEqual(User.objects.count(), 1)
         self.assertRedirects(response, reverse('forum_section:login'))
+    
+    def test_register_post_invalid(self):
+        response = self.client.post(reverse('forum_section:register'), {
+            'username': '',
+            'password1': 'pass123',
+            'password2': 'pass123'
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'register.html')
+        self.assertEqual(User.objects.count(), 0)
 
 
 class LoginViewTest(TestCase):
@@ -294,6 +372,14 @@ class LoginViewTest(TestCase):
             'password': 'testpass123'
         })
         self.assertRedirects(response, reverse('forum_section:show_main'))
+        
+    def test_login_post_invalid(self):
+        response = self.client.post(reverse('forum_section:login'), {
+            'username': 'testuser',
+            'password': 'wrongpass'
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'login.html')
 
 
 class LogoutViewTest(TestCase):
@@ -344,3 +430,19 @@ class DiscussionFormTest(TestCase):
             'forum': self.forum.id
         })
         self.assertFalse(form.is_valid())
+        
+class ShowMainViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+
+    def test_show_main_requires_login(self):
+        response = self.client.get(reverse('forum_section:show_main'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_show_main_logged_in(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(reverse('forum_section:show_main'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'main.html')
+        self.assertEqual(response.context['name'], 'testuser')
