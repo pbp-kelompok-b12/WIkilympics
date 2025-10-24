@@ -16,7 +16,7 @@
       <form method="POST" action="{% url 'main:addInForum' %}" class="flex">
         {% csrf_token %}
         <button
-          class="w-auto px-3 py-1.5 rounded-md bg-[#16a34a] hover:bg-[#15803d] text-[#ffffff] text-sm font-medium shadow-sm transition"
+          class="w-auto px-3 py-1.5 rounded-md bg-[#2B4C9F] hover:bg-[#1D3A6D] text-[#ffffff] text-sm font-medium shadow-sm transition"
           type="submit">
           Add more
         </button>
@@ -27,20 +27,18 @@
   <main class="container mx-auto px-4 py-6">
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {% for forum in forums %}
-        <article class="bg-[#ffffff] border-2 border-[#535353] rounded-xl mx-15">
+        <article class="bg-[#ffffff] border-4 border-[#FFC107] rounded-xl mx-15">
           <div class="p-5">
-            <div class="flex items-center justify-between gap-3 mb-3">
-                <h3 class="text-xl font-semibold m-0 truncate">{{ forum.topic }}</h3>
-                <span class="text-xs text-[#64748b] whitespace-nowrap">
-                    Posted on {{ forum.date_created|date:"M d, Y H:i" }}
-                </span>
-                {% if forum.name == request.user or request.user.is_superuser%}
+            <h3 class="text-xl font-semibold m-0 truncate">{{ forum.topic }}</h3>
+            <div class="flex items-justify justify-start gap-3 mb-3">
+                
+                {% if forum.name == request.user or request.user.is_superuser %}
                 <form method="POST" action="{% url 'main:delete_forum' forum.id %}" class="shrink-0">
                     {% csrf_token %}
                     <button
                     type="submit"
                     class="px-3 py-1.5 rounded-md bg-[#dc2626] hover:bg-[#b91c1c] text-[#ffffff] text-sm font-medium shadow-sm transition whitespace">
-                    Delete Forum
+                    Delete
                     </button>
                 </form>
                 <a href="{% url 'main:edit_forum' forum.id %}" class="text-[#4a90e2] hover:text-[#1c7ed6]">
@@ -70,12 +68,21 @@
               <p>{{ forum.description }}</p>
             </div>
 
+            {% if forum.thumbnail %}
+            <img src="{{ forum.thumbnail }}" alt="{{ forum.topic }}" class="w-full h-full object-cover">
+          {% else %}
+            <div class="w-full h-full bg-gray-200"></div>
+          {% endif %}
+
             <hr class="my-4 border-[#d1d5db]">
 
-           
             <p class="text-sm text-[#475569] mb-2">
               By: <b class="text-[#1f2937]">{{ forum.name }}</b>
             </p>
+
+            <span class="text-xs text-[#64748b] whitespace-nowrap">
+                    Posted on {{ forum.date_created|date:"M d, Y H:i" }}
+                </span>
 
             <hr class="my-4 border-[#d1d5db]">
 
@@ -104,7 +111,6 @@
                                 Delete
                             </button>
                             </form>
-                            <!-- got code from svg to code converter, idk why its so long-->
                             <a href="{% url 'main:edit_discussion' objs.id %}" class="text-[#4a90e2] hover:text-[#1c7ed6] text-xs inline-block">
                               <svg fill="#1a72aa" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                                 width="18" height="18" viewBox="0 0 494.936 494.936"
@@ -140,12 +146,11 @@
             {% endfor %}
             </div>
 
-
-            <form method="POST" action="{% url 'main:addInDiscussion' %}">
+            <form method="POST" action="{% url 'main:addInDiscussion' forum.id %}">
               {% csrf_token %}
               <button
                 type="submit"
-                class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#16a34a] hover:bg-[#15803d] text-[#ffffff] text-sm font-medium shadow-sm transition">
+                class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#2B4C9F] hover:bg-[#1D3A6D] text-[#ffffff] text-sm font-medium shadow-sm transition">
                 Reply
               </button>
             </form>

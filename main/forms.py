@@ -21,13 +21,13 @@ class ForumForm(forms.ModelForm):
 class DiscussionForm(ModelForm):
     class Meta:
         model = Discussion
-        fields = ['discuss']
+        fields = ['forum', 'discuss']  # Include forum
         widgets = {
+            'forum': forms.Select(attrs={
+                'class': 'w-full px-4 py-3 border-2 border-gray-300 rounded-md focus:ring-2 focus:ring-[#FFC107] focus:border-[#2B4C9F] transition text-gray-800'
+            }),
             'discuss': forms.Textarea(attrs={
                 'rows': 6,
                 'class': 'w-full px-4 py-3 border-2 border-gray-300 rounded-md focus:ring-2 focus:ring-[#FFC107] focus:border-[#2B4C9F] transition text-gray-800'
             }),
-        }
-        labels = {
-            'discuss': 'Description'
         }

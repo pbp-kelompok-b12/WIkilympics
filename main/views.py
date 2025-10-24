@@ -72,7 +72,7 @@ def addInForum(request):
 
     if form.is_valid() and request.method == 'POST':
         form_entry = form.save(commit = False)
-        form_entry.username = request.user
+        form_entry.name = request.user
         form_entry.save()
         return redirect('main:home')
 
@@ -85,20 +85,24 @@ def addInForum(request):
 
 
 @login_required(login_url="/login")
-def addInDiscussion(request):
+def addInDiscussion(request, id):
+    forum = get_object_or_404(Forum, id=id)
     form = DiscussionForm(request.POST or None)
 
     if form.is_valid() and request.method == 'POST':
-        form_entry = form.save(commit = False)
+        form_entry = form.save(commit=False)
         form_entry.username = request.user
+        form_entry.forum = forum
         form_entry.save()
         return redirect('main:home')
 
     context = {
-        'form': form
+        'form': form,
+        'forum': forum
     }
 
     return render(request, "addInDiscussion.html", context)
+
  
  
 # legacy functions
