@@ -2,167 +2,110 @@
 <section id="athletes" class="py-16 bg-white text-center">
   <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Athletes Highlight</h2>
 
+  {% if athletes_list %}
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10">
-    <div class="bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
-      <img src="https://cdn.pixabay.com/photo/2017/08/07/22/03/people-2605526_960_720.jpg" alt="Athlete 1" class="rounded-t-xl h-56 w-full object-cover">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">Usain Bolt</h3>
-        <p class="text-gray-600 text-sm">Track & Field</p>
-      </div>
-    </div>
-
-    <div class="bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
-      <img src="https://cdn.pixabay.com/photo/2019/02/17/17/29/swimmer-4006825_960_720.jpg" alt="Athlete 2" class="rounded-t-xl h-56 w-full object-cover">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">Katie Ledecky</h3>
-        <p class="text-gray-600 text-sm">Swimming</p>
-      </div>
-    </div>
-
-    <div class="bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
-      <img src="https://cdn.pixabay.com/photo/2016/10/24/20/35/tennis-1768423_960_720.jpg" alt="Athlete 3" class="rounded-t-xl h-56 w-full object-cover">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">Novak Djokovic</h3>
-        <p class="text-gray-600 text-sm">Tennis</p>
-      </div>
-    </div>
-
-    <div class="bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
-      <img src="https://cdn.pixabay.com/photo/2017/02/02/15/15/boxing-2033241_960_720.jpg" alt="Athlete 4" class="rounded-t-xl h-56 w-full object-cover">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">Claressa Shields</h3>
-        <p class="text-gray-600 text-sm">Boxing</p>
-      </div>
-    </div>
+    {% for athlete in athletes_list %}
+      <a href="#" 
+         class="block bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
+        {# nanti aktifkan ini kalau url sudah siap:
+           href="{% url 'athletes:athlete_detail' athlete.id %}" #}
+        <img src="{{ athlete.image.url }}" 
+             alt="{{ athlete.name }}" 
+             class="rounded-t-xl h-56 w-full object-cover">
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-[#1E3A8A]">{{ athlete.name }}</h3>
+          <p class="text-gray-600 text-sm">{{ athlete.sport }}</p>
+        </div>
+      </a>
+    {% endfor %}
   </div>
+  {% else %}
+    <p class="text-gray-500">No athlete data available.</p>
+  {% endif %}
 </section>
 
-<!-- UPCOMING EVENTS SECTION-->
+
+<!-- UPCOMING EVENTS SECTION -->
 <section id="events" class="py-16 bg-gray-50 text-center">
   <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Upcoming Events</h2>
+
+  {% if events_list %}
   <div class="max-w-4xl mx-auto space-y-6 px-5">
-    <div class="bg-white rounded-xl shadow-md p-6 flex justify-between items-center hover:shadow-lg transition">
-      <div class="text-left">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">Paris Marathon 2025</h3>
-        <p class="text-gray-600 text-sm">April 13, 2025 • Paris, France</p>
-      </div>
-      <span class="bg-[#FFD700] text-[#1E3A8A] px-4 py-1 rounded-full font-semibold text-sm">Running</span>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-md p-6 flex justify-between items-center hover:shadow-lg transition">
-      <div class="text-left">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">Tokyo Swimming Championship</h3>
-        <p class="text-gray-600 text-sm">June 2, 2025 • Tokyo, Japan</p>
-      </div>
-      <span class="bg-[#FFD700] text-[#1E3A8A] px-4 py-1 rounded-full font-semibold text-sm">Swimming</span>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-md p-6 flex justify-between items-center hover:shadow-lg transition">
-      <div class="text-left">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">World Badminton Cup</h3>
-        <p class="text-gray-600 text-sm">August 10, 2025 • Jakarta, Indonesia</p>
-      </div>
-      <span class="bg-[#FFD700] text-[#1E3A8A] px-4 py-1 rounded-full font-semibold text-sm">Badminton</span>
-    </div>
+    {% for event in events_list %}
+      <a href="{% url 'upcoming_event:daftar_event' %}" 
+         class="block bg-white rounded-xl shadow-md p-6 flex justify-between items-center hover:shadow-lg transition">
+        <div class="text-left">
+          <h3 class="text-lg font-semibold text-[#1E3A8A]">{{ event.title }}</h3>
+          <p class="text-gray-600 text-sm">{{ event.date }} • {{ event.location }}</p>
+        </div>
+        <span class="bg-[#FFD700] text-[#1E3A8A] px-4 py-1 rounded-full font-semibold text-sm">
+          {{ event.organizer }}
+        </span>
+      </a>
+    {% endfor %}
   </div>
+  {% else %}
+    <p class="text-gray-500">No events available.</p>
+  {% endif %}
 </section>
 
-<!-- LATEST NEWS SECTION -->
+
+<!-- LATEST ARTICLE SECTION -->
 <section id="news" class="py-16 bg-white text-center">
-  <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Latest News</h2>
+  <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Latest Articles</h2>
 
+  {% if article_list %}
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-10">
-    <div class="bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition p-6 text-left">
-      <img src="https://cdn.pixabay.com/photo/2016/03/05/22/22/runners-1236881_960_720.jpg" alt="News 1" class="rounded-xl mb-4 h-48 w-full object-cover">
-      <h3 class="text-lg font-semibold text-[#1E3A8A] mb-2">Olympic Trials Begin in Europe</h3>
-      <p class="text-gray-600 text-sm">Athletes from across Europe gather to compete for their place in the Paris 2025 games.</p>
-    </div>
-
-    <div class="bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition p-6 text-left">
-      <img src="https://cdn.pixabay.com/photo/2017/06/13/12/34/sport-2394493_960_720.jpg" alt="News 2" class="rounded-xl mb-4 h-48 w-full object-cover">
-      <h3 class="text-lg font-semibold text-[#1E3A8A] mb-2">New Records Set in Asian Games</h3>
-      <p class="text-gray-600 text-sm">Outstanding performances mark the Asian Games with multiple record-breaking wins.</p>
-    </div>
-
-    <div class="bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition p-6 text-left">
-      <img src="https://cdn.pixabay.com/photo/2018/01/22/07/52/skiing-3092850_960_720.jpg" alt="News 3" class="rounded-xl mb-4 h-48 w-full object-cover">
-      <h3 class="text-lg font-semibold text-[#1E3A8A] mb-2">Winter Sports Season Opens</h3>
-      <p class="text-gray-600 text-sm">The 2025 Winter season kicks off with an exciting lineup of international competitions.</p>
-    </div>
+    {% for article in article_list %}
+      <a href="{% url 'article:article_detail' article.id %}" 
+         class="block bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition p-6 text-left">
+        <img src="{{ article.thumbnail }}" 
+             alt="{{ article.title }}" 
+             class="rounded-xl mb-4 h-48 w-full object-cover">
+        <h3 class="text-lg font-semibold text-[#1E3A8A] mb-2">{{ article.title }}</h3>
+        <p class="text-gray-600 text-sm">{{ article.summary|truncatewords:20 }}</p>
+      </a>
+    {% endfor %}
   </div>
+  {% else %}
+    <p class="text-gray-500">No article articles yet.</p>
+  {% endif %}
 </section>
 
-<!-- FORUM & REVIEWS PREVIEW SECTION -->
+
+<!-- FORUM & REVIEWS SECTION -->
 <section id="forum-preview" class="bg-[#F9FAFB] py-16">
   <div class="max-w-6xl mx-auto text-center px-6">
     <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Forum & Reviews</h2>
 
-    <!-- Forum Cards -->
+    {% if forum_list %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Dummy Forum Card 1 -->
-      <div class="bg-white shadow-md rounded-xl p-6 text-left border border-gray-200 hover:shadow-lg transition transform hover:-translate-y-1">
-        <div class="flex items-center space-x-3 mb-3">
-          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Avatar" class="w-10 h-10 rounded-full">
-          <div>
-            <p class="font-semibold text-[#1E3A8A]">olympic_fan01</p>
-            <p class="text-sm text-gray-500">2 jam lalu</p>
+      {% for post in forum_list %}
+        <a href="#" 
+           class="block bg-white shadow-md rounded-xl p-6 text-left border border-gray-200 hover:shadow-lg transition transform hover:-translate-y-1">
+          {# nanti aktifkan:
+             href="{% url 'forum:post_detail' post.id %}" #}
+          <div class="flex items-center space-x-3 mb-3">
+            <img src="{{ post.user.profile_picture.url }}" alt="{{ post.user.username }}" class="w-10 h-10 rounded-full">
+            <div>
+              <p class="font-semibold text-[#1E3A8A]">{{ post.user.username }}</p>
+              <p class="text-sm text-gray-500">{{ post.created_at|timesince }} ago</p>
+            </div>
           </div>
-        </div>
-        <p class="text-gray-700 leading-relaxed">
-          Aku bener-bener kagum sama performa atlet renang Jepang tahun ini! Teknik mereka rapi banget dan konsisten.
-        </p>
-        <div class="mt-3 flex items-center text-gray-500 text-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="#FFD700" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFD700" class="w-5 h-5 mr-1">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14 9l-5 5m0 0l5 5m-5-5h12.75M3 19.5v-15" />
-          </svg>
-          24 likes
-        </div>
-      </div>
-
-      <!-- Dummy Forum Card 2 -->
-      <div class="bg-white shadow-md rounded-xl p-6 text-left border border-gray-200 hover:shadow-lg transition transform hover:-translate-y-1">
-        <div class="flex items-center space-x-3 mb-3">
-          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Avatar" class="w-10 h-10 rounded-full">
-          <div>
-            <p class="font-semibold text-[#1E3A8A]">sportslover23</p>
-            <p class="text-sm text-gray-500">5 jam lalu</p>
+          <p class="text-gray-700 leading-relaxed">{{ post.content|truncatewords:25 }}</p>
+          <div class="mt-3 flex items-center text-gray-500 text-sm">
+            <span class="border border-gray-400 px-3 py-1 rounded-full font-medium">Likes {{ post.likes }}</span>
           </div>
-        </div>
-        <p class="text-gray-700 leading-relaxed">
-          Basket final kemarin luar biasa! Tembakan tiga poin terakhir itu bener-bener bikin tegang 🔥
-        </p>
-        <div class="mt-3 flex items-center text-gray-500 text-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="#FFD700" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFD700" class="w-5 h-5 mr-1">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14 9l-5 5m0 0l5 5m-5-5h12.75M3 19.5v-15" />
-          </svg>
-          18 likes
-        </div>
-      </div>
-
-      <!-- Dummy Forum Card 3 -->
-      <div class="bg-white shadow-md rounded-xl p-6 text-left border border-gray-200 hover:shadow-lg transition transform hover:-translate-y-1">
-        <div class="flex items-center space-x-3 mb-3">
-          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Avatar" class="w-10 h-10 rounded-full">
-          <div>
-            <p class="font-semibold text-[#1E3A8A]">athleticsfan</p>
-            <p class="text-sm text-gray-500">1 hari lalu</p>
-          </div>
-        </div>
-        <p class="text-gray-700 leading-relaxed">
-          Ada yang tahu jadwal pertandingan bulutangkis berikutnya? Mau banget nonton live 😍
-        </p>
-        <div class="mt-3 flex items-center text-gray-500 text-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="#FFD700" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFD700" class="w-5 h-5 mr-1">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14 9l-5 5m0 0l5 5m-5-5h12.75M3 19.5v-15" />
-          </svg>
-          9 likes
-        </div>
-      </div>
+        </a>
+      {% endfor %}
     </div>
+    {% else %}
+      <p class="text-gray-500">No forum posts yet.</p>
+    {% endif %}
 
-    <!-- Button -->
     <div class="mt-10">
-      <a href="#" class="bg-[#1E3A8A] text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-300">
+      <a href="#" 
+         class="bg-[#1E3A8A] text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-300">
         Lihat Semua Forum
       </a>
     </div>

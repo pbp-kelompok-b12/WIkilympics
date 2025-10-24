@@ -20,9 +20,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    ## path('', include('main.urls')),
-    path('', include('landingpoll.urls')),   # landing page jadi halaman utama
+    path('', include('main.urls')),
+    # path('', include('landingpoll.urls')),   # landing page jadi halaman utama
     
-    # app lain tetap jalan di route masing-masing
-    path('main/', include('main.urls')),
+    # # app lain tetap jalan di route masing-masing
+    # path('main/', include('main.urls')),
+    # path('sports/', include('sports.urls')),  # aqila
+    # path('article/', include('article.urls')),  # vanessa
+    # path('upcoming_event/', include('upcoming_event.urls')),  # naira
 ]
+

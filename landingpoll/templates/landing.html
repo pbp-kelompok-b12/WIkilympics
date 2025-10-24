@@ -40,7 +40,7 @@
       Photo by <a href="https://www.pexels.com/" target="_blank" class="underline hover:text-white">Pexels</a>
     </p>
   </div>
-  
+
   <!-- Content -->
   <div class="hero-content relative z-10 flex flex-col md:flex-row items-center justify-between w-full">
     <div class="hero-text md:w-1/2 space-y-6 text-center md:text-left">
@@ -69,35 +69,25 @@
 <section id="category" class="py-16 bg-gray-50 text-center">
   <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Popular Sports</h2>
 
+  {% if sports_list %}
   <div class="category-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10">
-    <div class="category-card bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
-      <img src="https://cdn.pixabay.com/photo/2016/11/29/05/08/football-1868977_960_720.jpg" class="rounded-t-xl h-48 w-full object-cover" alt="Football">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">FOOTBALL</h3>
-      </div>
-    </div>
-
-    <div class="category-card bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
-      <img src="https://cdn.pixabay.com/photo/2017/03/12/13/41/basketball-2139449_960_720.jpg" class="rounded-t-xl h-48 w-full object-cover" alt="Basketball">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">BASKETBALL</h3>
-      </div>
-    </div>
-
-    <div class="category-card bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
-      <img src="https://cdn.pixabay.com/photo/2018/02/28/22/40/badminton-3184657_960_720.jpg" class="rounded-t-xl h-48 w-full object-cover" alt="Badminton">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">BADMINTON</h3>
-      </div>
-    </div>
-
-    <div class="category-card bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
-      <img src="https://cdn.pixabay.com/photo/2018/04/02/22/28/table-tennis-3281995_960_720.jpg" class="rounded-t-xl h-48 w-full object-cover" alt="Table Tennis">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold text-[#1E3A8A]">TABLE TENNIS</h3>
-      </div>
-    </div>
+    {% for sport in sports_list %}
+      <a href="{% url 'sports:show_sport' id=sport.id %}" 
+        class="block bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+        
+        <img src="{{ sport.sport_img }}" 
+            alt="{{ sport.sport_name }}" 
+            class="rounded-t-xl h-48 w-full object-cover">
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-[#1E3A8A] uppercase">{{ sport.sport_name }}</h3>
+        </div>
+      </a>
+    {% endfor %}
   </div>
+
+  {% else %}
+    <p class="text-gray-500 italic">Belum ada data olahraga yang ditampilkan.</p>
+  {% endif %}
 </section>
 
 <!-- USER STATUS INFO -->
@@ -203,6 +193,8 @@
 
 <!-- EXTRA SECTIONS -->
 {% include 'extra_sections.html' %}
+
+
 
 <script>
 function toggleAddForm() {
