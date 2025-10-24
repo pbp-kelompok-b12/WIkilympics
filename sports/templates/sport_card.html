@@ -33,7 +33,7 @@
     </div>
 
     <!-- Admin Buttons (Edit & Delete) -->
-    {% if user.is_authenticated and user.username == "admin" %}
+    {% if user.is_superuser %}
     <div class="absolute top-3 right-3 flex space-x-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <!-- Edit button -->
         <a href="javascript:void(0);" 

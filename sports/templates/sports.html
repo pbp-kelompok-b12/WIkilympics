@@ -60,7 +60,7 @@
                     {% endfor %}
                 </select>
 
-                {% if user.is_authenticated and user.username == "admin" %}
+                {% if user.is_superuser %}
                 <button onclick="showModal()" 
                     class="flex items-center justify-center w-12 h-12 rounded-full shadow-md transition-all duration-200"
                     style="background-color: rgb(255,255,0); color: rgb(30,60,200); outline: 2px solid white;"
