@@ -13,7 +13,7 @@
       <form method="POST" action="{% url 'forum_section:addInForum' %}" class="flex">
         {% csrf_token %}
         <button
-          class=" w-auto px-3 py-1.5 rounded-md bg-[#FFC107] hover:bg-[#bf8f00] text-[#2B4C9F] text-sm font-bold shadow-sm transition"
+          class=" w-auto px-3 py-1.5 rounded-md bg-[#fde801] hover:bg-[#bf8f00] text-[#2B4C9F] text-sm font-bold shadow-sm transition"
           type="submit">
           Add more
         </button>
@@ -24,7 +24,7 @@
   <main class="container mx-auto px-4 py-6">
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {% for forum in forums %}
-        <article class="bg-[#ffffff] border-4 border-[#FFC107] rounded-xl mx-15" data-forum-id="{{ forum.id }}">
+        <article class="bg-[#ffffff] border-4 border-[#fde801] rounded-xl mx-15" data-forum-id="{{ forum.id }}">
           <div class="p-5">
             <h3 class="text-xl font-semibold m-0 truncate">{{ forum.topic }}</h3>
             <div class="flex items-justify justify-start gap-3 mb-3">
@@ -146,7 +146,7 @@
               {% csrf_token %}
               <button
                 type="submit"
-                class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#FFC107] hover:bg-[#bf8f00] text-[#2B4C9F] text-sm font-bold shadow-sm transition">
+                class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#fde801] hover:bg-[#bf8f00] text-[#2B4C9F] text-sm font-bold shadow-sm transition">
                 Reply
               </button>
             </form>
