@@ -11,7 +11,7 @@
 </section>
 
 <main class="container mx-auto px-4 py-6">
-  <div class="container mx-auto px-4 py-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-end">
+  <div class="container mx-auto  mt-32 mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-end">
     <form method="POST" action="{% url 'forum_section:addInForum' %}" class="flex">
       {% csrf_token %}
       <button
