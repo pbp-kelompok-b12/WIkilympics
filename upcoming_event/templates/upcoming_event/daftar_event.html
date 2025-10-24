@@ -2,10 +2,11 @@
 {% load static %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-6 py-10">
-  <h1 class="text-2xl font-bold text-gray-800 mb-6">🏅 Upcoming Events</h1>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-  <!-- Tombol Tambah -->
+<div class="max-w-5xl mx-auto px-6 py-10">
+  <h1 class="upcoming-title">🏅 Upcoming Events</h1>
+
   {% if user.is_authenticated and user.is_superuser %}
   <a href="{% url 'upcoming_event:add_event' %}"  
      class="inline-block bg-[#0A1A3C] text-white px-4 py-2 rounded-lg mb-6 hover:bg-[#142955] transition">
@@ -13,14 +14,11 @@
   </a>
   {% endif %}
 
-  <!-- Grid Event -->
   {% if events %}
   <div id="event-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for event in events %}
     <article class="event-card bg-white rounded-2xl border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden"
              data-id="{{ event.id }}">
-      
-      <!-- Gambar -->
       <div class="aspect-[16/9] relative overflow-hidden">
         {% if event.image_url %}
         <img src="{{ event.image_url }}" alt="{{ event.name }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
@@ -31,7 +29,6 @@
         {% endif %}
       </div>
 
-      <!-- Konten -->
       <div class="p-5">
         <p class="text-gray-500 text-sm mb-2">📅 {{ event.date }}</p>
         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ event.name }}</h3>
@@ -65,7 +62,6 @@
   {% endif %}
 </div>
 
-<!-- Script -->
 <script src="{% static 'upcoming_event/js/toast.js' %}?v=7"></script>
 <script src="{% static 'upcoming_event/js/upcoming_event.js' %}?v=7"></script>
 {% endblock %}
