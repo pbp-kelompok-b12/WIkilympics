@@ -1,0 +1,123 @@
+/* =============================
+   🌊 Global Page Styling
+============================= */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(90deg, #1E3A8A 0%, #2563EB 100%);
+  min-height: 100vh;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container utama biar konten tetap di tengah */
+.max-w-5xl {
+  background: transparent; /* biar background birunya dari body tetap keliatan */
+}
+
+/* =============================
+   🏷️ Section Title
+============================= */
+h1 {
+  color: #ffffff; /* putih biar kontras sama bg biru */
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* =============================
+   🎯 Add Upcoming Event Button
+============================= */
+a.bg-\[\#0A1A3C\] {
+  background-color: #1E3A8A !important;
+  color: white !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+a.bg-\[\#0A1A3C\]:hover {
+  background-color: #2563EB !important;
+  transform: translateY(-3px);
+}
+
+/* =============================
+   🧊 Event Card
+============================= */
+.event-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(229, 231, 235, 0.6);
+  border-radius: 1rem;
+  color: #111827;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+}
+
+/* =============================
+   ✨ Text Colors in Card
+============================= */
+.event-card h3 {
+  color: #0A1A3C;
+}
+
+.event-card p {
+  color: #374151;
+}
+
+/* Link hover efek */
+.event-card a,
+.event-card button {
+  transition: color 0.2s ease;
+}
+
+.event-card a:hover,
+.event-card button:hover {
+  color: #1E3A8A;
+}
+
+/* =============================
+   🏅 Header Title Styling
+============================= */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@400;600&display=swap');
+
+/* Header Title Styling */
+h1.upcoming-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffffff;
+  letter-spacing: 1.5px;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =============================
+   ✨ Add Upcoming Event Button (new)
+============================= */
+a.bg-\[\#0A1A3C\] {
+  background-color: #ffffff !important; /* ganti jadi putih */
+  color: #1E3A8A !important; /* teks biru tua */
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+}
+
+a.bg-\[\#0A1A3C\]:hover {
+  background-color: #E0E7FF !important; /* biru muda lembut */
+  color: #0A1A3C !important;
+  transform: translateY(-3px);
+  border: 2px solid #1E3A8A;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+

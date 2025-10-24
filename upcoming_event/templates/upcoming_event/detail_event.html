@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-style" style="max-width: 600px; margin: 2rem auto; background-color: #f9fafb; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+
+  <h1 style="color: #0A1A3C; margin-bottom: 1rem;">{{ event.name }}</h1>
+
+  <p><strong>Organizer:</strong> {{ event.organizer }}</p>
+  <p><strong>Date:</strong> {{ event.date }}</p>
+  <p><strong>Location:</strong> {{ event.location }}</p>
+  <p><strong>Sports:</strong> {{ event.sport_branch }}</p>
+
+  {% if event.image_url %}
+    <img src="{{ event.image_url }}" alt="{{ event.name }}" style="width: 100%; border-radius: 0.75rem; margin-top: 1rem;">
+  {% endif %}
+
+  {% if user.is_authenticated and user.is_superuser %}
+  <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem;">
+    <a href="{% url 'upcoming_event:edit_event' event.id %}" 
+       style="background-color: #0A1A3C; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none;">Edit</a>
+  </div>
+  {% endif %}
+
+  <div style="margin-top: 1rem;">
+    <a href="{% url 'upcoming_event:daftar_event' %}" 
+       style="background-color: #9ca3af; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none;">Kembali</a>
+  </div>
+</div>
+{% endblock %}
