@@ -11,11 +11,11 @@
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-12 text-[#1E3A8A]">
           <a href="/" class="font-bold hover:text-[#1E40AF] transition-colors">Home</a>
-          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Athletes</a>
-          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Sports</a>
-          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Upcoming Events</a>
-          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Sports Article</a>
-          <a href="#" class="font-medium hover:text-[#1E40AF] transition-colors">Forum & Review Pages</a>
+          <a href="{% url 'athletes:show_main' %}" class="font-medium hover:text-[#1E40AF] transition-colors">Athletes</a>
+          <a href="{% url 'sports:show_main' %}" class="font-medium hover:text-[#1E40AF] transition-colors">Sports</a>
+          <a href="{% url 'upcoming_event:daftar_event' %}" class="font-medium hover:text-[#1E40AF] transition-colors">Upcoming Events</a>
+          <a href="{% url 'article:show_articles' %}" class="font-medium hover:text-[#1E40AF] transition-colors">Sports Article</a>
+          <a href="{% url 'forum_section:show_main' %}" class="font-medium hover:text-[#1E40AF] transition-colors">Forum & Review Pages</a>
         </div>
   
         <!-- Desktop User Section -->
@@ -56,11 +56,12 @@
       <div class="px-6 py-4 space-y-4 text-[#1E3A8A]">
         <div class="space-y-1">
           <a href="/" class="block font-bold py-3 hover:text-[#1E40AF] transition-colors">Home</a>
-          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Athletes</a>
-          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports</a>
-          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Upcoming Events</a>
-          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports Article</a>
-          <a href="#" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Forum & Review Pages</a>
+          <a href="{% url 'athletes:show_main' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Athletes</a>
+          <a href="{% url 'sports:show_main' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports</a>
+          <a href="{% url 'upcoming_event:daftar_event' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Upcoming Events</a>
+          <a href="{% url 'article:show_articles' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Sports Article</a>
+          <a href="{% url 'forum_section:show_main' %}" class="block font-medium py-3 hover:text-[#1E40AF] transition-colors">Forum & Review Pages</a>
+
         </div>
   
         <div class="border-t border-gray-200 pt-4">
@@ -92,7 +93,4 @@
   
   <!-- Tambahkan link font di dalam <head> -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
-  
-# TODO
-# path ke masing-masing modul
-# user information (OPTIONAL)
+

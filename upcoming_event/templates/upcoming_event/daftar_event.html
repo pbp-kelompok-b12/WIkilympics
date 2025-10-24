@@ -2,9 +2,10 @@
 {% load static %}
 
 {% block content %}
+{% include 'navbar.html' %} 
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-<div class="max-w-5xl mx-auto px-6 py-10">
+<div class="max-w-5xl mx-auto px-6 py-20">
   <h1 class="upcoming-title">🏅 Upcoming Events</h1>
 
   {% if user.is_authenticated and user.is_superuser %}
