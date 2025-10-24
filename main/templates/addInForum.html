@@ -13,7 +13,7 @@
   <header class="bg-[#2B4C9F] border-b-4 border-[#FFC107]">
     <div class="container mx-auto px-4 py-6 flex items-center justify-between">
       <div class="flex items-center space-x-4">
-        <a href="{% url 'main:home' %}" 
+        <a href="{% url 'threads:home' %}" 
            class="px-4 py-2 bg-white text-[#2B4C9F] font-semibold rounded-md hover:bg-gray-100 transition-colors">
           Cancel
         </a>
@@ -72,7 +72,7 @@
 
         $.ajax({
           type: "POST",
-          url: "{% url 'main:addInForum' %}",
+          url: "{% url 'threads:addInForum' %}",
           data: $(this).serialize(),
           success: function(response) {
             if (response.success) {

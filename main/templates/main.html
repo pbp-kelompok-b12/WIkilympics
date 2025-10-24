@@ -8,12 +8,12 @@
 
 <p>{{ class }}</p>
 
-<a href="{% url 'main:home' %}">
+<a href="{% url 'threads:home' %}">
   <button>Forums</button>
 </a>
 <br>
 <br>
-<a href="{% url 'main:logout' %}">
+<a href="{% url 'threads:logout' %}">
   <button>Logout</button>
 </a>
 <h5>Sesi terakhir login: {{ last_login }}</h5>
