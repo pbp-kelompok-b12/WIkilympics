@@ -1,0 +1,58 @@
+.detail-style {
+    max-width: 700px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: 'Poppins', sans-serif;
+    color: #0A1A3C;
+}
+
+.detail-style h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    color: #0A1A3C;
+    text-align: center;
+    font-weight: 700;
+}
+
+.detail-style p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    color: #374151;
+}
+
+.detail-style p strong {
+    color: #0A1A3C;
+}
+
+.detail-style img {
+    display: block;
+    margin: 1.5rem auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.detail-style .actions {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.detail-style .actions a {
+    display: inline-block;
+    margin: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: white;
+    background-color: #0A1A3C;
+    transition: background 0.3s ease;
+}
+
+.detail-style .actions a:hover {
+    background-color: #1e2f5d;
+}
