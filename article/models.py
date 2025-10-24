@@ -59,5 +59,4 @@ class Article(models.Model):
     @property
     def like_count(self):
         return self.like_user.count()
-
-        
+    

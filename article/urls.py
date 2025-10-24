@@ -16,4 +16,5 @@ urlpatterns = [
 
     path('like/<uuid:article_id>/', like_article, name='like_article'),
     path('dislike/<uuid:article_id>/', dislike_article, name='dislike_article'),
+
 ]

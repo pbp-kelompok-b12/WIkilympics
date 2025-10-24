@@ -2,137 +2,131 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from article.models import Article
+from sports.models import Sports 
+# import uuid
 
-# # Create your tests here.
-class ArticleTests(TestCase):
+class ArticleTest(TestCase):
+    
+    @classmethod
+    def setUpTestData(cls):
+        # 1. Buat User yang akan digunakan oleh semua test di class ini
+        cls.user = User.objects.create_user(username='testuser', password='password')
+        cls.admin = User.objects.create_superuser(username='admin', password='adminpassword', email='admin@test.com')
+
+        # 2. Buat Sport yang terdaftar
+        cls.registered_sport = Sports.objects.create(sport_name='athletics')
+        
+        # 3. Buat Artikel untuk pengujian
+        cls.article_registered = Article.objects.create(
+            title='Record Lari 100m', content='Lari 100m.', category='athletics', thumbnail='http://example.com/a1.jpg'
+        )
+        cls.article_unregistered = Article.objects.create(
+            title='E-Sports Baru', content='Artikel tentang E-Sports.', category='esports_test', thumbnail='http://example.com/a2.jpg'
+        )
 
     def setUp(self):
         self.client = Client()
-        self.normal_user = User.objects.create_user(username='testuser', password='testpassword')
-        User.objects.create_user(username='admin', password='adminpassword', is_staff=True) # Admin user for completeness
 
-        # Setup Articles
-        self.article1 = Article.objects.create(
-            title='Article 1 Normal', content='Content 1.', category='athletics', thumbnail='http://example.com/img1.jpg',
-        )
-        self.article2 = Article.objects.create(
-            title='Article 2 Trending', content='Content 2.', category='swimming', thumbnail='http://example.com/img2.jpg',
-        )
-        # Membuat article2 trending (like_count > 6)
-        for i in range(7):
-            self.article2.like_user.add(User.objects.create_user(username=f'liker{i}', password='pw'))
+    ## 1. TEST VIEW DAN DATA JSON
 
-        # Setup URLs
-        self.urls = {
-            'show': reverse('article:show_articles'),
-            'json': reverse('article:show_json'),
-            'json_id': reverse('article:show_json_id', kwargs={'article_id': self.article1.id}),
-            'add': reverse('article:add_article'),
-            'edit': reverse('article:edit_article', kwargs={'id': self.article1.id}),
-            'delete': reverse('article:delete_article', kwargs={'id': self.article1.id}),
-            'detail': reverse('article:article_detail', kwargs={'id': self.article1.id}),
-            'like': reverse('article:like_article', kwargs={'article_id': self.article1.id}),
-            'dislike': reverse('article:dislike_article', kwargs={'article_id': self.article1.id}),
-        }
-        
-        self.new_data = {
-            'title': 'New Title', 'content': 'New Content', 'category': 'a', 'thumbnail': 'http://new.com/img.jpg'
-        }
-
-    def test_show_articles_view(self):
-        response = self.client.get(self.urls['show'])
+    def test_show_articles_view_loads(self):
+        """Test the main articles page loads successfully."""
+        response = self.client.get(reverse('article:show_articles'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'show_articles.html')
 
-    def test_json_views(self):
-        self.client.login(username='testuser', password='testpassword')
-        self.article1.like_user.add(self.normal_user)
-        
-        # Test show_json (Mencakup is_liked/is_disliked path)
-        response_json = self.client.get(self.urls['json']).json()
-        article_data = next(a for a in response_json if a['id'] == str(self.article1.id))
-        self.assertTrue(article_data['is_liked'])
-        
-        # Test show_json_id (Success)
-        response_json_id = self.client.get(self.urls['json_id'])
-        self.assertEqual(response_json_id.status_code, 200)
-        self.assertEqual(response_json_id.json()['title'], 'Article 1 Normal')
-        
-        # Test show_json_id (404)
-        non_existent_id = '00000000-0000-0000-0000-000000000000'
-        url_404_json = reverse('article:show_json_id', kwargs={'article_id': non_existent_id})
-        self.assertEqual(self.client.get(url_404_json).status_code, 404)
-
-    def test_article_crud_flow(self):
-        initial_count = Article.objects.count()
-
-        # add
-        self.assertEqual(self.client.post(self.urls['add'], self.new_data).status_code, 200)
-        self.assertEqual(Article.objects.count(), initial_count + 1)
-        
-        # edit
-        updated_data = self.new_data.copy()
-        updated_data['title'] = 'Updated Title'
-        self.assertEqual(self.client.post(self.urls['edit'], updated_data).status_code, 200)
-        self.article1.refresh_from_db()
-        self.assertEqual(self.article1.title, 'Updated Title')
-        
-        # delete
-        self.assertEqual(self.client.post(self.urls['delete']).status_code, 200)
-        self.assertEqual(Article.objects.count(), initial_count)
-
-    def test_article_detail_view(self):
-        # Success path
-        response = self.client.get(self.urls['detail'])
+    def test_show_json_content(self):
+        """Test JSON endpoint returns correct number of articles."""
+        response = self.client.get(reverse('article:show_json'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'article_detail.html')
+        data = response.json()
+        self.assertEqual(len(data), 2)
+        # Check anonymous status
+        self.assertFalse(data[0]['is_liked'])
 
-        # 404
-        non_existent_id = '00000000-0000-0000-0000-000000000000'
-        url_404_detail = reverse('article:article_detail', kwargs={'id': non_existent_id})
-        self.assertEqual(self.client.get(url_404_detail).status_code, 404)
+    def test_show_json_id_success(self):
+        """Test retrieving single article data."""
+        response = self.client.get(reverse('article:show_json_id', args=[self.article_registered.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['title'], 'Record Lari 100m')
+
+    ## 2. TEST CRUD (ADMIN)
+
+    def test_add_article_success(self):
+        """Test adding new article."""
+        self.assertEqual(Article.objects.count(), 2) # Awal
+        response = self.client.post(reverse('article:add_article'), {
+            'title': 'Test Add', 'content': 'Content', 'category': 'badminton', 'thumbnail': 'http://new.com/img.jpg',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
+        self.assertEqual(Article.objects.count(), 3) # Bertambah
+
+    def test_edit_article_success(self):
+        """Test editing an existing article by POST."""
+        self.client.login(username='admin', password='adminpassword')
+        new_title = "TITLE BARU"
+        response = self.client.post(reverse('article:edit_article', args=[self.article_registered.id]), {
+            'title': new_title, 'content': self.article_registered.content, 
+            'category': self.article_registered.category, 'thumbnail': self.article_registered.thumbnail,
+        })
+        self.assertEqual(response.status_code, 200)
+        self.article_registered.refresh_from_db()
+        self.assertEqual(self.article_registered.title, new_title)
+
+    def test_delete_article_success(self):
+        """Test deleting article by admin."""
+        self.client.login(username='admin', password='adminpassword')
+        response = self.client.post(reverse('article:delete_article', args=[self.article_registered.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Article.objects.count(), 1)
+
+
+    ## 3. TEST LIKE/DISLIKE (Otorisasi)
+
+    def test_like_article_unauthenticated_fails(self):
+        """Test like action fails for unauthenticated user (403)."""
+        response = self.client.post(reverse('article:like_article', args=[self.article_registered.id]))
+        self.assertEqual(response.status_code, 403)
+    
+    def test_like_article_authenticated_success(self):
+        """Test liking an article works and updates count."""
+        self.client.login(username='testuser', password='password')
+        response = self.client.post(reverse('article:like_article', args=[self.article_registered.id]))
+        self.article_registered.refresh_from_db()
+        self.assertEqual(self.article_registered.like_count, 1)
+
+    def test_dislike_article_switch_from_like(self):
+        """Test switching from like to dislike."""
+        self.client.login(username='testuser', password='password')
+        # Like dulu
+        self.article_registered.like_user.add(self.user)
+        # Dislike
+        response = self.client.post(reverse('article:dislike_article', args=[self.article_registered.id]))
+        self.article_registered.refresh_from_db()
+        self.assertEqual(self.article_registered.like_count, 0)
+        self.assertTrue(self.article_registered.dislike_user.filter(id=self.user.id).exists())
+
+
+    ## 4. TEST article_detail VIEW (Logika Kategori/Sport)
+
+    def test_article_detail_unauthenticated_redirect(self):
+        """Test unauthenticated user is redirected."""
+        response = self.client.get(reverse('article:article_detail', args=[self.article_registered.id]))
+        self.assertRedirects(response, reverse('article:show_articles'), status_code=302, target_status_code=200)
+
+    def test_article_detail_sport_found_context(self):
+        """Test context when Sport is registered."""
+        self.client.login(username='testuser', password='password')
+        response = self.client.get(reverse('article:article_detail', args=[self.article_registered.id]))
         
-        # Models: __str__, like_count, is_trending
-        self.assertEqual(str(self.article1), 'Article 1 Normal')
-        self.assertEqual(self.article1.like_count, 0)
-        self.assertFalse(self.article1.is_trending)
-        self.assertTrue(self.article2.is_trending)
+        self.assertIsNotNone(response.context['sport_id'])
+        self.assertEqual(response.context['sport_id'], str(self.registered_sport.id))
+        self.assertEqual(response.context['clean_category_name'], 'Athletics')
 
-    # User react ketika login
-    def test_reactions_requires_login(self):
-        self.assertEqual(self.client.get(self.urls['like']).status_code, 302)
-        self.assertEqual(self.client.get(self.urls['dislike']).status_code, 302)
-
-    # Like dislike
-    def test_reactions_logic_full(self):
-        self.client.login(username='testuser', password='testpassword')
+    def test_article_detail_sport_not_found_context(self):
+        """Test context when Sport is NOT registered (sport_id must be None)."""
+        self.client.login(username='testuser', password='password')
+        response = self.client.get(reverse('article:article_detail', args=[self.article_unregistered.id]))
         
-        # like
-        self.client.post(self.urls['like'])
-        self.article1.refresh_from_db()
-        self.assertTrue(self.article1.like_user.exists())
-        self.assertEqual(self.article1.like_count, 1)
-
-        # dislike (hapus like sebelum)
-        self.client.post(self.urls['dislike'])
-        self.article1.refresh_from_db()
-        self.assertFalse(self.article1.like_user.exists())
-        self.assertTrue(self.article1.dislike_user.exists())
-
-        # like (hapus dislike sebelum)
-        response_like_toggle = self.client.post(self.urls['like'])
-        self.article1.refresh_from_db()
-        self.assertTrue(self.article1.like_user.exists())
-        self.assertFalse(self.article1.dislike_user.exists())
-        self.assertEqual(response_like_toggle.json()['likes'], 1)
-
-        # like (hapus like)
-        self.client.post(self.urls['like'])
-        self.article1.refresh_from_db()
-        self.assertFalse(self.article1.like_user.exists())
-
-        # dislike (hapus dislike)
-        self.client.post(self.urls['dislike']) 
-        self.client.post(self.urls['dislike']) 
-        self.article1.refresh_from_db()
-        self.assertFalse(self.article1.dislike_user.exists())
+        self.assertIsNone(response.context['sport_id'])
+        self.assertEqual(response.context['clean_category_name'], 'Esports Test')

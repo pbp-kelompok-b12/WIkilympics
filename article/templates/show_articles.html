@@ -142,7 +142,7 @@
 
 <script>
 const IS_AUTHENTICATED = "{{ request.user.is_authenticated|yesno:'true,false' }}" === 'true';
-const IS_ADMIN = "{{ request.user.is_superuser|yesno:'true,false' }}";
+const IS_ADMIN = "{{ request.user.is_superuser|yesno:'true,false' }}"==='true';
 
 const URL_JSON = "{% url 'article:show_json' %}";
 const URL_ADD = "{% url 'article:add_article' %}";

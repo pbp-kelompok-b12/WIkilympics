@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>Olympic Sports</title>
+{% endblock meta %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+{% include 'create_sport_modal.html' %}
+{% include 'edit_sport_modal.html' %}
+
+<div style="background-color: rgb(30, 60, 200);" class="w-full pt-16 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Header Section -->
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl font-extrabold tracking-wide select-none mb-2" style="font-family: 'Orbitron', sans-serif; color: white;">OLYMPIC SPORTS</h1>
+            <p class="text-lg tracking-wide" style="font-family: 'Poppins', sans-serif; color: rgb(255, 255, 0);">Every Olympic sport has a story — uncover them all with WIkilympics!</p>
+        </div>
+
+        <!-- Search + Filter + Add -->
+        <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
+            <!-- Search -->
+            <form id="searchForm" method="GET" action="" class="relative w-full max-w-md flex-shrink-0">
+                <input 
+                    type="text" 
+                    name="q" 
+                    id="searchInput"
+                    value="{{ search_query }}"
+                    placeholder="Search for a sport..." 
+                    class="w-full pl-4 pr-12 py-3 rounded-full border border-[rgb(255,255,0)] focus:outline-none focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent text-[rgb(30,60,200)] shadow-sm placeholder-gray-400 bg-white"
+                    style="font-family: 'Poppins', sans-serif;"
+                >
+                <button 
+                    type="submit" 
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[rgb(255,255,0)] hover:text-white transition-colors"
+                >
+                    <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                </button>
+            </form>
+
+            <!-- Dropdown Filters -->
+            <div class="flex items-center gap-3">
+                <select id="participationFilter" class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
+                    onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)';"
+                    onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';">
+                    <option value="">All Participation Types</option>
+                    <option value="individual">Individual</option>
+                    <option value="team">Team</option>
+                    <option value="both">Individual & Team</option>
+                </select>
+
+                <select id="typeFilter" class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
+                    onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)';"
+                    onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';">
+                    <option value="">All Discipline Types</option>
+                    {% for key, value in categories.items %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+
+                {% if user.is_authenticated and user.username == "admin" %}
+                <button onclick="showModal()" 
+                    class="flex items-center justify-center w-12 h-12 rounded-full shadow-md transition-all duration-200"
+                    style="background-color: rgb(255,255,0); color: rgb(30,60,200); outline: 2px solid white;"
+                    onmouseover="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)'; this.style.transform='scale(1.1)';"
+                    onmouseout="this.style.backgroundColor='rgb(255, 255, 0)'; this.style.color='rgb(30,60,200)'; this.style.transform='scale(1)';">
+                    <i class="fa-solid fa-plus text-lg"></i>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Grid of Sports -->
+        <div id="sportsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for sport in sports_list %}
+                {% include 'sport_card.html' with sport=sport %}
+                {% empty %}
+                <p class="col-span-full text-center text-white">No sports available. Please add a new sport using the + button above.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("searchForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const query = document.getElementById("searchInput").value.trim();
+        updateFilters(query);
+    });
+    
+    document.getElementById("participationFilter").addEventListener("change", () => updateFilters());
+    document.getElementById("typeFilter").addEventListener("change", () => updateFilters());
+
+    function updateFilters(searchQuery = null) {
+        const participation = document.getElementById("participationFilter").value;
+        const type = document.getElementById("typeFilter").value;
+        const query = searchQuery !== null ? searchQuery : document.getElementById("searchInput").value.trim();
+
+        const params = new URLSearchParams();
+        if (query) params.append("q", query);
+        if (participation) params.append("participation", participation);
+        if (type) params.append("category", type);
+
+        fetch(`?${params.toString()}`, {
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+        })
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const newGrid = doc.querySelector("#sportsGrid").innerHTML;
+            document.querySelector("#sportsGrid").innerHTML = newGrid;
+        });
+    }
+
+    document.addEventListener("sportAdded", function() {
+        updateFilters();
+    });
+
+    document.addEventListener("sportEdited", function() {
+        updateFilters();
+    });
+
+</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+{% endblock content %}

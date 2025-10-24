@@ -1,7 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from sports.models import Sports
 from article.models import Article
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -84,8 +85,17 @@ def article_detail(request, id):
         return HttpResponseRedirect(reverse('article:show_articles'))
     
     article = get_object_or_404(Article, pk=id)
+
+    clean_category_name = article.category.replace('_', ' ').title()
+
+    sport_id=None
+    try:
+        sport_obj = Sports.objects.get(sport_name__iexact=article.category)
+        sport_id = str(sport_obj.id)
+    except Sports.DoesNotExist:
+        pass
     
-    context={'article':article}
+    context={'article':article, 'sport_id':sport_id, 'clean_category_name': clean_category_name}
     return render(request, "article_detail.html", context)
 
 # @login_required(login_url='main:login_user')
