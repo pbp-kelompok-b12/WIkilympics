@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<title>Olympic Sports</title>
+<title>Olympic Athletes</title>
 {% endblock meta %}
 
 {% block content %}
 
 {% include 'navbar.html' %}
-{% include 'create_sport_modal.html' %}
-{% include 'edit_sport_modal.html' %}
+{% include 'create_athlete_modal.html' %}
+{% include 'edit_athlete_modal.html' %}
 
 <div style="background-color: rgb(30, 60, 200);" class="w-full pt-16 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <!-- Header Section -->
         <div class="mb-8 text-center">
-            <h1 class="text-4xl font-extrabold tracking-wide select-none mb-2" style="font-family: 'Orbitron', sans-serif; color: white;">OLYMPIC SPORTS</h1>
-            <p class="text-lg tracking-wide" style="font-family: 'Poppins', sans-serif; color: rgb(255, 255, 0);">Every Olympic sport has a story — uncover them all with WIkilympics!</p>
+            <h1 class="text-4xl font-extrabold tracking-wide select-none mb-2" style="font-family: 'Orbitron', sans-serif; color: white;">OLYMPIC ATHLETES</h1>
+            <p class="text-lg tracking-wide" style="font-family: 'Poppins', sans-serif; color: rgb(255, 255, 0);">Discover the champions behind the medals - explore their journeys and achievements!</p>
         </div>
 
         <!-- Search + Filter + Add -->
@@ -28,7 +28,7 @@
                     name="q" 
                     id="searchInput"
                     value="{{ search_query }}"
-                    placeholder="Search for a sport..." 
+                    placeholder="Search for an athlete..." 
                     class="w-full pl-4 pr-12 py-3 rounded-full border border-[rgb(255,255,0)] focus:outline-none focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent text-[rgb(30,60,200)] shadow-sm placeholder-gray-400 bg-white"
                     style="font-family: 'Poppins', sans-serif;"
                 >
@@ -42,25 +42,22 @@
 
             <!-- Dropdown Filters -->
             <div class="flex items-center gap-3">
-                <select id="participationFilter" class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
+                <select id="sportFilter" class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
                     onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)';"
                     onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';">
-                    <option value="">All Participation Types</option>
-                    <option value="individual">Individual</option>
-                    <option value="team">Team</option>
-                    <option value="both">Individual & Team</option>
-                </select>
-
-                <select id="typeFilter" class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
-                    onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)';"
-                    onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';">
-                    <option value="">All Discipline Types</option>
-                    {% for key, value in categories.items %}
-                        <option value="{{ key }}">{{ value }}</option>
+                    <option value="">All Sports</option>
+                    {% for key, value in sports.items %}
+                        <option value="{{ key }}" {% if selected_sport == key %}selected{% endif %}>{{ value }}</option>
                     {% endfor %}
                 </select>
 
-                {% if user.is_superuser %}
+                <input type="text" id="countryFilter" placeholder="Filter by country..." 
+                    class="px-4 py-2 font-semibold rounded-md border border-[rgb(255,255,0)] focus:ring-2 focus:ring-[rgb(255,255,0)] focus:border-transparent transition-colors" style="background-color: white; color: rgb(30, 60, 200); font-family: 'Poppins', sans-serif;"
+                    onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)';"
+                    onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)';"
+                    value="{{ selected_country }}">
+
+                {% if user.is_authenticated and user.is_staff %}
                 <button onclick="showModal()" 
                     class="flex items-center justify-center w-12 h-12 rounded-full shadow-md transition-all duration-200"
                     style="background-color: rgb(255,255,0); color: rgb(30,60,200); outline: 2px solid white;"
@@ -72,12 +69,12 @@
             </div>
         </div>
 
-        <!-- Grid of Sports -->
-        <div id="sportsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for sport in sports_list %}
-                {% include 'sport_card.html' with sport=sport %}
+        <!-- Grid of Athletes -->
+        <div id="athletesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for athlete in athletes_list %}
+                {% include 'athlete_card.html' with athlete=athlete %}
                 {% empty %}
-                <p class="col-span-full text-center text-white">No sports available. Please add a new sport using the + button above.</p>
+                <p class="col-span-full text-center text-white">No athletes available. Please add a new athlete using the + button above.</p>
             {% endfor %}
         </div>
     </div>
@@ -90,18 +87,18 @@
         updateFilters(query);
     });
     
-    document.getElementById("participationFilter").addEventListener("change", () => updateFilters());
-    document.getElementById("typeFilter").addEventListener("change", () => updateFilters());
+    document.getElementById("sportFilter").addEventListener("change", () => updateFilters());
+    document.getElementById("countryFilter").addEventListener("input", () => updateFilters());
 
     function updateFilters(searchQuery = null) {
-        const participation = document.getElementById("participationFilter").value;
-        const type = document.getElementById("typeFilter").value;
+        const sport = document.getElementById("sportFilter").value;
+        const country = document.getElementById("countryFilter").value;
         const query = searchQuery !== null ? searchQuery : document.getElementById("searchInput").value.trim();
 
         const params = new URLSearchParams();
         if (query) params.append("q", query);
-        if (participation) params.append("participation", participation);
-        if (type) params.append("category", type);
+        if (sport) params.append("sport", sport);
+        if (country) params.append("country", country);
 
         fetch(`?${params.toString()}`, {
             headers: { "X-Requested-With": "XMLHttpRequest" },
@@ -110,17 +107,21 @@
         .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
-            const newGrid = doc.querySelector("#sportsGrid").innerHTML;
-            document.querySelector("#sportsGrid").innerHTML = newGrid;
+            const newGrid = doc.querySelector("#athletesGrid").innerHTML;
+            document.querySelector("#athletesGrid").innerHTML = newGrid;
         });
     }
 
-    document.addEventListener("sportAdded", function() {
+    document.addEventListener("athleteAdded", function() {
         updateFilters();
     });
 
-    document.addEventListener("sportEdited", function() {
+    document.addEventListener("athleteEdited", function() {
         updateFilters();
+    });
+
+    document.addEventListener("athleteDeleted", function() {
+        location.reload();
     });
 
 </script>
