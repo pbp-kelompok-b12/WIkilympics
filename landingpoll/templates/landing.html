@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<link rel="stylesheet" href="{% static 'landingpoll.css' %}">
+
+{% if messages %}
+  <div class="notification-container fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-3">
+    {% for message in messages %}
+      <div class="notification-message animate-slide-up-fade">
+        <span class="notification-icon">🏅</span>
+        <p>{{ message }}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    
+    setTimeout(() => {
+      document.querySelectorAll(".notification-message").forEach(el => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(20px)";
+      });
+    }, 3000);
+  </script>
+{% endif %}
+
+<!-- HERO SECTION -->
+<section class="hero-section relative flex flex-col md:flex-row items-center justify-between px-10 py-20 text-white">
+  <!-- Background image -->
+  <div class="hero-bg absolute inset-0">
+    <img src="https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg?auto=compress&cs=tinysrgb&w=1920" 
+         alt="Olympic Background"
+         class="w-full h-full object-cover opacity-80">
+    <div class="overlay absolute inset-0 bg-gradient-to-r from-[#1E3A8A]/90 to-[#2563EB]/80"></div>
+  </div>
+
+  <p class="image-credit absolute bottom-2 right-4 text-sm text-white/70 italic drop-shadow-md">
+      Photo by <a href="https://www.pexels.com/" target="_blank" class="underline hover:text-white">Pexels</a>
+    </p>
+  </div>
+
+  <!-- Content -->
+  <div class="hero-content relative z-10 flex flex-col md:flex-row items-center justify-between w-full">
+    <div class="hero-text md:w-1/2 space-y-6 text-center md:text-left">
+      <h1 class="text-5xl font-extrabold leading-tight">
+        Discover the Spirit of <span class="text-[#FFD700]">Olympics</span>
+      </h1>
+      <p class="text-lg text-blue-100 max-w-md">
+        Explore sports, athletes, and upcoming events — your all-in-one hub for Olympic excitement!
+      </p>
+      <a href="#category"
+         class="inline-block bg-[#FFD700] text-[#1E3A8A] font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-yellow-400 transition duration-200">
+        Explore Now
+      </a>
+    </div>
+
+    <!-- <div class="hero-image md:w-1/2 mt-10 md:mt-0 flex justify-center">
+      <img src="https://cdn.pixabay.com/photo/2016/03/27/18/39/basketball-1283762_960_720.jpg"
+           alt="Olympic Player"
+           class="rounded-2xl shadow-2xl w-4/5 md:w-3/4 transform hover:scale-105 transition duration-300">
+    </div> -->
+  </div>
+</section>
+
+
+<!-- CATEGORY SECTION -->
+<section id="category" class="py-16 bg-gray-50 text-center">
+  <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Popular Sports</h2>
+
+  {% if sports_list %}
+  <div class="category-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10">
+    {% for sport in sports_list %}
+      <a href="{% url 'sports:show_sport' id=sport.id %}" 
+        class="block bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+        
+        <img src="{{ sport.sport_img }}" 
+            alt="{{ sport.sport_name }}" 
+            class="rounded-t-xl h-48 w-full object-cover">
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-[#1E3A8A] uppercase">{{ sport.sport_name }}</h3>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+
+  {% else %}
+    <p class="text-gray-500 italic">Belum ada data olahraga yang ditampilkan.</p>
+  {% endif %}
+</section>
+
+<!-- USER STATUS INFO -->
+<div class="text-center my-10">
+  {% if user.is_authenticated %}
+    {% if user.is_superuser %}
+      <p class="text-green-700 font-medium">Anda login sebagai <span class="font-semibold">Admin</span>.</p>
+    {% else %}
+      <p class="text-blue-700 font-medium">Anda login sebagai <span class="font-semibold">User Biasa</span>.</p>
+    {% endif %}
+  {% else %}
+    <p class="text-gray-500 italic">Anda belum login.</p>
+  {% endif %}
+</div>
+
+<!-- BAGIAN ADMIN (POLLS) -->
+{% if user.is_superuser%}
+<section class="admin-poll-section">
+  <h2>Kelola Polling</h2>
+
+  <div class="flex justify-center mb-10">
+    <button onclick="toggleAddForm()" class="btn-main">
+      + Tambah Polling
+    </button>
+  </div>
+
+  <div class="flex flex-col items-center space-y-6">
+    {% for poll in polls %}
+      <div class="poll-card">
+        <h3>{{ poll.question_text }}</h3>
+        <ul>
+          {% for option in poll.options.all %}
+            <li>
+              <span>{{ option.option_text }}</span>
+              <span class="text-sm text-gray-600">{{ option.votes }} votes</span>
+            </li>
+          {% endfor %}
+        </ul>
+
+        <div class="flex justify-center space-x-3">
+          <form method="POST" action="">
+            {% csrf_token %}
+            <input type="hidden" name="poll_id" value="{{ poll.id }}">
+            <button type="submit" name="edit_poll" class="btn-edit">Edit</button>
+          </form>
+          <form method="POST" action="{% url 'landingpoll:delete_poll' poll.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">Hapus</button>
+          </form>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-gray-600">Belum ada polling yang dibuat.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- FORM POLLING -->
+<div id="poll-form-container" class="hidden flex-col items-center justify-center mt-10 mb-20">
+  <form method="POST" action=""
+        class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md border border-gray-200 relative">
+    <!-- Tombol batal (X) di dalam kotak -->
+    <button id="cancel-form-btn"
+            type="button"
+            class="hidden absolute top-3 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold transition">
+      ×
+    </button>
+
+    <h2 id="poll-form-title" class="text-2xl font-semibold text-[#1E3A8A] mb-4 text-center">
+      Tambah Polling Baru
+    </h2>
+
+    {% csrf_token %}
+    <div class="mb-4">
+      <label for="question" class="block font-medium text-gray-700">Pertanyaan</label>
+      <input type="text" name="question" id="question"
+        class="border rounded-lg w-full p-2" required>
+    </div>
+
+    <div id="options-container" class="mb-4">
+      <label class="block font-medium text-gray-700">Opsi Jawaban</label>
+      <input type="text" name="options[]" class="option-input border rounded-lg w-full p-2 mt-2" placeholder="Opsi 1" required>
+    </div>
+
+    <button type="button" onclick="addOption()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1 px-3 rounded-lg">
+      + Tambah Opsi
+    </button>
+
+    <div class="flex justify-center mt-6">
+      <button type="submit" class="bg-[#1E3A8A] hover:bg-[#1D4ED8] text-white font-semibold py-2 px-6 rounded-lg">
+        Simpan Polling
+      </button>
+    </div>
+  </form>
+</div>
+
+
+<!--POPUP POLLING (USER) -->
+{% if poll and not is_admin %}
+  {% include 'polling.html' %}
+{% endif %}
+
+<!-- EXTRA SECTIONS -->
+{% include 'extra_sections.html' %}
+
+
+
+<script>
+function toggleAddForm() {
+  const form = document.getElementById('poll-form-container');
+  const cancelBtn = document.getElementById('cancel-form-btn');
+  const title = document.getElementById('poll-form-title');
+  const submitBtn = form.querySelector("button[type='submit']");
+
+  // mode tambah
+  form.classList.toggle('hidden');
+  form.scrollIntoView({ behavior: "smooth" });
+
+  title.textContent = "Tambah Polling Baru";
+  submitBtn.textContent = "Simpan Polling";
+  cancelBtn.classList.remove("hidden");
+}
+</script>
+<script>
+function addOption() {
+  const form = document.querySelector("#poll-form-container form");
+  const container = form.querySelector("#options-container");
+
+  // Hitung jumlah input saat ini
+  const inputCount = container.querySelectorAll("input").length + 1;
+
+  // buat elemen input baru
+  const input = document.createElement("input");
+  input.type = "text";
+  input.name = "options[]";
+  input.placeholder = `Opsi ${inputCount}`;
+  input.classList.add("option-input", "border", "rounded-lg", "w-full", "p-2", "mt-2");
+
+  // tambahkan ke container
+  container.appendChild(input);
+}
+</script>
+
+
+<script src="{% static 'landingpoll.js' %}"></script>
+
+{% endblock %}
