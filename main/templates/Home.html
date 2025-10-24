@@ -13,7 +13,7 @@
       <h2 class="text-2xl font-semibold" id="forum-count">
         Currently active forums: {{count}}
       </h2>
-      <form method="POST" action="{% url 'threads:addInForum' %}" class="flex">
+      <form method="POST" action="{% url 'main:addInForum' %}" class="flex">
         {% csrf_token %}
         <button
           class="w-auto px-3 py-1.5 rounded-md bg-[#2B4C9F] hover:bg-[#1D3A6D] text-[#ffffff] text-sm font-medium shadow-sm transition"
@@ -42,7 +42,7 @@
                     Delete
                     </button>
                 </form>
-                <a href="{% url 'threads:edit_forum' forum.id %}" class="text-[#4a90e2] hover:text-[#1c7ed6]">
+                <a href="{% url 'main:edit_forum' forum.id %}" class="text-[#4a90e2] hover:text-[#1c7ed6]">
                 <svg fill="#1a72aa" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                   width="25" height="25" viewBox="0 0 494.936 494.936"
                   xml:space="preserve">
@@ -104,7 +104,7 @@
 
                         <div class="flex items-center gap-2 shrink-0">
                           {% if  objs.username == request.user or request.user.is_superuser %}
-                            <form method="POST" action="{% url 'threads:delete_discussion' objs.id %}" class="inline-block">
+                            <form method="POST" action="{% url 'main:delete_discussion' objs.id %}" class="inline-block">
                             {% csrf_token %}
                             <button
                                 type="submit"
@@ -112,7 +112,7 @@
                                 Delete
                             </button>
                             </form>
-                            <a href="{% url 'threads:edit_discussion' objs.id %}" class="text-[#4a90e2] hover:text-[#1c7ed6] text-xs inline-block">
+                            <a href="{% url 'main:edit_discussion' objs.id %}" class="text-[#4a90e2] hover:text-[#1c7ed6] text-xs inline-block">
                               <svg fill="#1a72aa" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                                 width="18" height="18" viewBox="0 0 494.936 494.936"
                                 xml:space="preserve">
@@ -145,7 +145,7 @@
             {% endfor %}
             </div>
 
-            <form method="POST" action="{% url 'threads:addInDiscussion' forum.id %}">
+            <form method="POST" action="{% url 'main:addInDiscussion' forum.id %}">
               {% csrf_token %}
               <button
                 type="submit"
