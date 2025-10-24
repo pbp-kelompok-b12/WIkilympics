@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from article.models import Article
 from sports.models import Sports 
-# import uuid
 
 class ArticleTest(TestCase):
     

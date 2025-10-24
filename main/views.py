@@ -11,7 +11,6 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Your account has been successfully created!')
-            # return redirect('main:login')
             return redirect('main:login_user')
         
     context = {'form':form}
@@ -23,8 +22,7 @@ def login_user(request):
          if form.is_valid():
             user = form.get_user()
             login(request, user)
-            # return redirect('main:show_main')
-            return redirect('article:show_articles')
+            return redirect('main:show_main')
          
     else:
         form = AuthenticationForm(request)
@@ -34,8 +32,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    # return redirect('main:login')
-    return redirect('article:show_articles')
+    return redirect('main:login_user')
 
 # TODO
 # line 26, redirect ke tempat yang benar

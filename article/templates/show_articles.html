@@ -9,13 +9,21 @@
 {% include 'navbar.html' %} 
 
 <div class="relative min-h-screen text-white pt-20" 
-     style="background-color: #001C5B;"> 
+     style="background-color: #1E40AF;"> 
     <div class="absolute inset-0 z-0" 
          style="background: linear-gradient(to bottom, rgba(0, 28, 91, 0.8) 0%, rgba(10, 66, 224, 0.1) 50%, rgba(0, 28, 91, 0.8) 100%);">
     </div>
 
-    <div class="relative z-10 max-w-full px-4 sm:px-6 lg:px-8 pb-8">
-        <h1 class="text-5xl font-bold mb-8 border-b border-blue-700 pb-3 pt-5">Sports Articles</h1>
+    <div class="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div class="flex justify-between items-center border-b border-blue-700 pb-3 pt-5 mb-8">
+                
+            <h1 class="text-5xl font-bold">Sports Articles</h1>
+            
+            <button onclick="loadArticles()" class="block bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-medium py-3 px-4 rounded text-center transition-colors">
+                Refresh
+            </button>
+
+        </div>
         
         <p class="text-lg text-gray-300 mb-10">
         Stay updated with the latest sports news and stories — from record-breaking performances 
@@ -231,7 +239,6 @@ function createCategoryOptions(articles) {
     });
 
     CATEGORY_SELECT.innerHTML = optionsHtml;
-    // Set nilai default (penting saat memuat ulang data)
     CATEGORY_SELECT.value = CURRENT_FILTER;
 }
 
@@ -264,17 +271,6 @@ function formatTimeAgo(date) {
   if (diff < 3600) return `${Math.round(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.round(diff / 3600)}h ago`;
   return `${Math.round(diff / 86400)}d ago`;
-}
-
-// Fungsi untuk menampilkan peringatan login
-function showLoginAlert(e) {
-    if (e) {
-        // Mencegah navigasi bawaan browser (href="#")
-        e.preventDefault(); 
-        e.stopPropagation();
-    }
-    alert('Anda harus login terlebih dahulu untuk melihat detail artikel.');
-    return false;
 }
 
 // Render and fetch
@@ -311,7 +307,7 @@ function renderArticle(a, isTrending = false) {
     if (IS_AUTHENTICATED) {
         detailLink = `href="${URL_DETAIL(a.id)}"`
     } else {
-        detailLink = `href="#" onclick="showLoginAlert(event); return false;"`;
+        detailLink = `href="#" onclick="alert('Anda harus login terlebih dahulu untuk melihat detail artikel.'); return false;"`;
     }
 
     // Delete/Edit button for admin
@@ -361,8 +357,6 @@ function renderArticle(a, isTrending = false) {
 
 // Delete article
 async function deleteArticle(id) {
-    if (!IS_ADMIN) return;
-
     // Konfirmasi
     const confirmed = window.confirm("Are you sure you want to delete this article?");
     if (!confirmed) return;

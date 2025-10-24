@@ -72,7 +72,6 @@ def edit_article(request, id):
         return JsonResponse({'success': True, 'message': 'Article updated successfully.'}, status=200)
     else:
         return JsonResponse({'success': False, 'errors': form.errors}, status=400)
-    
 
 @require_POST
 def delete_article(request, id):
