@@ -17,7 +17,8 @@ from .forms import *
 from django.views.generic.edit import CreateView
 
 
-@login_required(login_url="/login")
+# @login_required(login_url="/login")
+@login_required(login_url='main:login_user')
 def edit_forum(request, id):
     forum = get_object_or_404(Forum, id=id)
     
@@ -36,7 +37,8 @@ def edit_forum(request, id):
 
 
 
-@login_required
+# @login_required
+@login_required(login_url='main:login_user')
 def edit_discussion(request, id):
     discussion = get_object_or_404(Discussion, pk=id)
 
@@ -52,7 +54,8 @@ def edit_discussion(request, id):
     return render(request, "editDiscussion.html", {"form": form, "discussion": discussion})
 
 
-@login_required(login_url="/login")
+# @login_required(login_url="/login")
+@login_required(login_url='main:login_user')
 def home(request):
     forums = Forum.objects.all()
     count=forums.count()
@@ -66,7 +69,8 @@ def home(request):
     return render(request,'home.html',context)
 
 
-@login_required(login_url="/login")
+# @login_required(login_url="/login")
+@login_required(login_url='main:login_user')
 def addInForum(request):
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         form = ForumForm(request.POST)
@@ -83,7 +87,8 @@ def addInForum(request):
     return render(request, "addInForum.html", {"form": form})
 
 
-@login_required(login_url="/login")
+# @login_required(login_url="/login")
+@login_required(login_url='main:login_user')
 def addInDiscussion(request, id):
     forum = get_object_or_404(Forum, id=id)
     form = DiscussionForm(request.POST or None)
@@ -106,7 +111,8 @@ def addInDiscussion(request, id):
  
 # legacy functions
 
-@login_required(login_url="/login")
+# @login_required(login_url="/login")
+@login_required(login_url='main:login_user')
 def show_main(request):
     context = {
     'npm': '240123456',
@@ -118,7 +124,8 @@ def show_main(request):
     return render(request, "main.html", context)   
 
 @require_POST
-@login_required
+# @login_required
+@login_required(login_url='main:login_user')
 def delete_discussion(request, id):
     discussion = get_object_or_404(Discussion, pk=id, username=request.user)
     discussion.delete()
@@ -126,7 +133,8 @@ def delete_discussion(request, id):
 
 @require_POST
 
-@login_required(login_url="/login")
+# @login_required(login_url="/login")
+@login_required(login_url='main:login_user')
 def delete_forum(request, id):
     forum = get_object_or_404(Forum, pk=id, name=request.user)
     forum.delete()

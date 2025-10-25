@@ -90,18 +90,7 @@
   {% endif %}
 </section>
 
-<!-- USER STATUS INFO -->
-<div class="text-center my-10">
-  {% if user.is_authenticated %}
-    {% if user.is_superuser %}
-      <p class="text-green-700 font-medium">Anda login sebagai <span class="font-semibold">Admin</span>.</p>
-    {% else %}
-      <p class="text-blue-700 font-medium">Anda login sebagai <span class="font-semibold">User Biasa</span>.</p>
-    {% endif %}
-  {% else %}
-    <p class="text-gray-500 italic">Anda belum login.</p>
-  {% endif %}
-</div>
+
 
 <!-- BAGIAN ADMIN (POLLS) -->
 {% if user.is_superuser%}
@@ -195,6 +184,18 @@
 {% include 'extra_sections.html' %}
 
 
+<!-- USER STATUS INFO -->
+<div class="text-center my-10">
+  {% if user.is_authenticated %}
+    {% if user.is_superuser %}
+      <p class="text-green-700 font-medium">Anda login sebagai <span class="font-semibold">Admin</span>.</p>
+    {% else %}
+      <p class="text-blue-700 font-medium">Anda login sebagai <span class="font-semibold">User Biasa</span>.</p>
+    {% endif %}
+  {% else %}
+    <p class="text-gray-500 italic">Anda belum login.</p>
+  {% endif %}
+</div>
 
 <script>
 function toggleAddForm() {
@@ -230,9 +231,11 @@ function addOption() {
   // tambahkan ke container
   container.appendChild(input);
 }
+
 </script>
 
 
 <script src="{% static 'landingpoll.js' %}"></script>
 
 {% endblock %}
+

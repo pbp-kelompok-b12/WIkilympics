@@ -25,7 +25,7 @@ document.addEventListener("submit", function (e) {
     const form = e.target;
     const formData = new FormData(form);
 
-    // Cek mode tambah atau edit
+    
     const isEdit = form.querySelector("input[name=poll_id]") !== null;
     formData.append(isEdit ? "save_edit" : "add_poll", "1");
 
@@ -43,6 +43,7 @@ document.addEventListener("submit", function (e) {
           showNotification(data.message);
 
           if (data.poll_id) {
+            
             const pollCard = document.querySelector(
               `.poll-card input[value='${data.poll_id}']`
             )?.closest(".poll-card");
@@ -61,24 +62,46 @@ document.addEventListener("submit", function (e) {
                 )
                 .join("");
             }
+          } else if (data.html) {
+            
+            const container = document.querySelector(".admin-poll-section .flex-col");
+            if (container) container.insertAdjacentHTML("afterbegin", data.html);
           }
 
-          else if (data.html) {
-            const container = document.querySelector(
-              ".admin-poll-section .flex-col"
-            );
-            if (container)
-              container.insertAdjacentHTML("afterbegin", data.html);
-          }
+          
+          const formContainer = document.getElementById("poll-form-container");
+          const form = formContainer.querySelector("form");
 
           form.reset();
-          document
-            .getElementById("poll-form-container")
-            .classList.add("hidden");
+
+         
+          const optionsContainer = form.querySelector("#options-container");
+          if (optionsContainer) {
+            optionsContainer.innerHTML = `
+              <label class="block font-medium text-gray-700">Opsi Jawaban</label>
+              <input type="text" name="options[]" class="option-input border rounded-lg w-full p-2 mt-2" placeholder="Masukkan opsi jawaban" required>
+            `;
+          }
+
+        
+          const hiddenPollId = form.querySelector("input[name='poll_id']");
+          if (hiddenPollId) hiddenPollId.remove();
+
+          document.getElementById("poll-form-title").textContent = "Tambah Polling Baru";
+          const submitBtn = form.querySelector("button[type='submit']");
+          submitBtn.textContent = "Simpan Polling";
+
+          const cancelBtn = document.getElementById("cancel-form-btn");
+          if (cancelBtn) cancelBtn.classList.add("hidden");
+
+        
+          formContainer.classList.add("hidden");
+         
         } else {
           showNotification("⚠️ Gagal menyimpan polling.");
         }
       })
+
       .catch((err) => {
         console.error("Terjadi kesalahan server:", err);
         showNotification("🚨 Terjadi kesalahan server.");

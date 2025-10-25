@@ -33,7 +33,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('main:login_user')
+    return redirect('landingpoll:landing_page')
 
 # TODO
 # line 26, redirect ke tempat yang benar
