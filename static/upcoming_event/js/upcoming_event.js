@@ -30,7 +30,7 @@ function lihatDetail(eventId) {
     </div>
   `;
 
-  fetch(`/upcoming-event/get-event-json/${eventId}/`)
+  fetch(`/upcoming_event/get-event-json/${eventId}/`)
     .then(res => res.json())
     .then(data => {
       console.log("✅ Detailed data received:", data);
@@ -66,7 +66,7 @@ function lihatDetail(eventId) {
 function hapusEvent(eventId) {
   console.log("🔴 Klik hapus event id =", eventId);
   showConfirmToast("Are you sure you want to delete this event?", () => {
-    fetch(`/upcoming-event/${eventId}/delete/`, {
+    fetch(`/upcoming_event/${eventId}/delete/`, {
       method: "POST",
       headers: { "X-CSRFToken": getCSRFToken() },
     })
