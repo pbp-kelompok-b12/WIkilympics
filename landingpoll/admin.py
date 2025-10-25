@@ -17,3 +17,4 @@ class PollQuestionAdmin(admin.ModelAdmin):
 @admin.register(PollOption)
 class PollOptionAdmin(admin.ModelAdmin):
     list_display = ('question', 'option_text', 'votes')
+
