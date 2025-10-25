@@ -7,10 +7,10 @@ import traceback
 
 # import modul lain
 from sports.models import Sports
-# from athletes.models import Athlete
+from athletes.models import Athletes
 from upcoming_event.models import UpcomingEvent
 from article.models import Article
-# from forum.models import ForumPost
+from forum_section.models import Forum, Discussion
 
 
 def landing_page(request):
@@ -40,8 +40,24 @@ def landing_page(request):
     try:
         events_list = UpcomingEvent.objects.order_by("date")[:3]
     except Exception as e:
-        print("⚠️ Gagal load Article:", e)
+        print("⚠️ Gagal load Upcoming Event:", e)
     
+    try:
+        forum_list = Forum.objects.order_by("-date_created")[:3]  # pakai date_created, descending
+    except Exception as e:
+        print("⚠️ Gagal load Forum:", e)
+        forum_list = []
+
+    try:
+        discussion_list = Discussion.objects.order_by("-date_created")[:3]
+    except Exception as e:
+        print("⚠️ Gagal load Discussion:", e)
+        discussion_list = []
+
+    try:
+        athletes_list = Athletes.objects.order_by("athlete_name")[:3]
+    except Exception as e:
+        print("⚠️ Gagal load Athletes:", e)
 
     
     # Bagian proses form Polling (Add / Edit)
@@ -59,16 +75,24 @@ def landing_page(request):
 
                 # kalau request dari AJAX
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    csrf_token = request.META.get("CSRF_COOKIE", "")
                     html = f"""
                     <div class='poll-card animate-fade'>
                         <h3>{poll_obj.question_text}</h3>
                         <ul>
                             {''.join([
-                                f"<li>{opt.option_text} <span class='text-sm text-gray-600'>{opt.votes} votes</span></li>"
+                                f"<li><span>{opt.option_text}</span> <span class='text-sm text-gray-600'>{opt.votes} votes</span></li>"
                                 for opt in poll_obj.options.all()
                             ])}
                         </ul>
+                        <div class="flex justify-center space-x-3 mt-3">
+                            <form method="POST" action="">
+                                <input type="hidden" name="poll_id" value="{poll_obj.id}">
+                                <button type="submit" name="edit_poll" class="btn-edit bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-lg">Edit</button>
+                            </form>
+                            <form method="POST" action="/delete_poll/{poll_obj.id}/">
+                                <button type="submit" class="btn-delete bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">Hapus</button>
+                            </form>
+                        </div>
                     </div>
                     """
                     return JsonResponse({
