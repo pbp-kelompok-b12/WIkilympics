@@ -1,0 +1,62 @@
+/* navbar tambahan */
+nav.custom-navbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+}
+
+nav.custom-navbar .nav-link {
+  color: #0A1A3C;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+nav.custom-navbar .nav-link:hover {
+  color: #1e2f5d;
+}
+
+/* styling modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* tombol close modal */
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #374151;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #0A1A3C;
+}

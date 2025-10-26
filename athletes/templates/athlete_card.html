@@ -1,0 +1,101 @@
+{% load static %}
+<article id="athlete-card-{{ athlete.id }}" class="relative bg-white rounded-lg border border-gray-200 overflow-hidden cursor-pointer group transition-transform duration-300 ease-in-out hover:scale-105">
+    <!-- Thumbnail Image -->
+    <a href="{% url 'athletes:show_athlete' athlete.id %}" class="block relative overflow-hidden">
+        {% if athlete.athlete_photo %}
+        <img src="{{ athlete.athlete_photo }}" alt="{{ athlete.athlete_name }}" 
+             class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+        {% else %}
+        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+            <i class="fas fa-user text-4xl text-gray-400"></i>
+        </div>
+        {% endif %}
+    </a>
+
+    <!-- Dark gradient overlay -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none"></div>
+
+    <!-- Athlete name overlay -->
+    <div class="absolute bottom-3 left-3 text-white font-semibold text-lg drop-shadow-lg">
+        {{ athlete.athlete_name }}
+    </div>
+
+    <!-- Sport badge -->
+    <div class="absolute top-3 left-3 bg-[rgb(255,255,0)] text-[rgb(30,60,200)] px-2 py-1 rounded-full text-xs font-bold">
+        {{ athlete.sport }}
+    </div>
+
+    <!-- Details overlay (appear on hover) -->
+    <div class="absolute inset-0 bg-black/80 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between pointer-events-none group-hover:pointer-events-auto">
+        <div>
+            <h3 class="text-xl font-bold">{{ athlete.athlete_name }}</h3>
+            <p class="text-sm mt-1">{{ athlete.country }}</p>
+            <p class="text-sm text-[rgb(255,255,0)]">{{ athlete.sport }}</p>
+            <p class="text-xs mt-2 line-clamp-3">{{ athlete.biography|truncatewords:20 }}</p>
+        </div>              
+        <a href="{% url 'athletes:show_athlete' athlete.id %}" 
+            class="mt-4 inline-block px-4 py-2 rounded-full font-semibold transition-all duration-200 shadow-md w-max"
+            style="background-color: white; color: rgb(30,60,200); outline: 2px solid white;" 
+            onmouseover="this.style.backgroundColor='rgb(255,255,0)'; this.style.color='rgb(30,60,200)'; this.style.transform='scale(1.1)';" 
+            onmouseout="this.style.backgroundColor='white'; this.style.color='rgb(30,60,200)'; this.style.transform='scale(1)';"> 
+            View Profile
+        </a>
+    </div>
+
+    <!-- Admin Buttons (Edit & Delete) -->
+    {% if user.is_authenticated and user.is_staff %}
+    <div class="absolute top-3 right-3 flex space-x-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <!-- Edit button -->
+        <a href="javascript:void(0);" 
+            onclick="setupEditModal('{{ athlete.id }}')"
+            class="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+            style="transform: scale(1);"
+            onmouseover="this.style.transform='scale(1.1)';"
+            onmouseout="this.style.transform='scale(1)';">
+            <i class="fa-solid fa-pencil" style="color: #ffffff;"></i>
+        </a>     
+    
+        <!-- Delete button -->
+        <a href="javascript:void(0);" 
+            onclick="deleteAthlete('{{ athlete.id }}')"
+            class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors flex items-center justify-center"
+            style="transform: scale(1);"
+            onmouseover="this.style.transform='scale(1.1)';"
+            onmouseout="this.style.transform='scale(1)';">
+            <i class="fa-solid fa-trash"></i>
+        </a>
+    </div>
+    {% endif %}
+</article>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script>
+    async function deleteAthlete(athleteId) {
+        if (!confirm("Are you sure you want to delete this athlete?")) return;
+    
+        const response = await fetch(`/athletes/delete-athlete-ajax/${athleteId}/`, {
+            method: "POST",
+        });
+    
+        try {
+            const data = await response.json();
+    
+            if (data.status === "success") {
+                alert(data.message);
+    
+                const card = document.getElementById(`athlete-card-${athleteId}`);
+                if (card) {
+                    card.remove();
+                }
+    
+                document.dispatchEvent(new CustomEvent('athleteDeleted', { detail: athleteId }));
+            } else {
+                alert("Failed to delete athlete: " + data.message);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Failed to delete athlete. (Invalid JSON returned)");
+        }
+    }
+</script>

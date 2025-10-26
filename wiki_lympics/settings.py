@@ -47,6 +47,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'main',
+    'article',
+    'sports',
+    'landingpoll',
+    'upcoming_event',
+    'forum_section',
+    'athletes',
 ]
 
 MIDDLEWARE = [
