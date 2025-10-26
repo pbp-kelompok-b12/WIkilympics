@@ -72,7 +72,9 @@ ROOT_URLCONF = "wiki_lympics.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates",
+                 BASE_DIR / "forum_section" / "templates",],
+        
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
