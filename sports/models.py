@@ -26,7 +26,7 @@ class Sports(models.Model):
     participation_structure = models.CharField(max_length=20, choices=PARTICIPATION_STRUCTURE, default='individual')
     sport_type = models.CharField(max_length=20, choices=SPORT_TYPE, default='athletic_sport')
     country_of_origin = models.CharField(max_length=255)
-    country_flag_img = models.URLField(max_length=2048 , blank=True, null=True)
+    country_flag_img = models.URLField(max_length=5096 , blank=True, null=True)
     first_year_played = models.IntegerField(default=0)
     history_description = models.TextField()
     equipment = models.TextField()
