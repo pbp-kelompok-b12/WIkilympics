@@ -55,7 +55,7 @@ def landing_page(request):
         discussion_list = []
 
     try:
-        athletes_list = Athletes.objects.order_by("athlete_name")[:3]
+        athletes_list = Athletes.objects.order_by("athlete_name")[:4]
     except Exception as e:
         print("⚠️ Gagal load Athletes:", e)
 
