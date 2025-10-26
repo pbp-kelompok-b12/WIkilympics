@@ -14,6 +14,9 @@ class Sports(models.Model):
         ('strength_sport', 'Strength Sport'),
         ('athletic_sport', 'Athletic Sport'),
         ('racket_sport', 'Racket Sport'),
+        ('ball_sport', 'Ball Sport'),
+        ('combat_sport', 'Combat Sport'),
+        ('target_sport', 'Target Sport'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -31,6 +34,3 @@ class Sports(models.Model):
     def __str__(self):
        return self.sport_name
     
-# TODO
-# cari type of equipment yg lebih cocok
-# migrate model
