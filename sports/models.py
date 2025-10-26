@@ -21,7 +21,7 @@ class Sports(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sport_name = models.CharField(max_length=255)
-    sport_img = models.URLField(blank=True, null=True)
+    sport_img = models.URLField( max_length = 2048, blank=True, null=True)
     sport_description = models.TextField()
     participation_structure = models.CharField(max_length=20, choices=PARTICIPATION_STRUCTURE, default='individual')
     sport_type = models.CharField(max_length=20, choices=SPORT_TYPE, default='athletic_sport')
