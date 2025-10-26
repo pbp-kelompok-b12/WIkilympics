@@ -69,6 +69,7 @@ def home(request):
     return render(request,'home.html',context)
 
 
+
 # @login_required(login_url="/login")
 @login_required(login_url='main:login_user')
 def addInForum(request):
