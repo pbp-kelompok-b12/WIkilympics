@@ -1,9 +1,11 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.models import User
+import json
 
 # Create your views here.
-from django.contrib.auth import authenticate, login as auth_login
-
 
 @csrf_exempt
 def login(request):
@@ -70,3 +72,25 @@ def register(request):
             "status": False,
             "message": "Invalid request method."
         }, status=400)
+
+@csrf_exempt
+def logout(request):
+    if request.method == 'POST':
+        # Check if user is authenticated before logging out
+        if request.user.is_authenticated:
+            username = request.user.username
+            auth_logout(request)
+            return JsonResponse({
+                "status": True,
+                "message": f"User {username} logged out successfully!"
+            }, status=200)
+        else:
+            return JsonResponse({
+                "status": False,
+                "message": "No user is currently logged in."
+            }, status=400)
+    else:
+        return JsonResponse({
+            "status": False,
+            "message": "Invalid request method. Only POST allowed."
+        }, status=405)
