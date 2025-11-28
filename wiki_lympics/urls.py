@@ -27,4 +27,5 @@ urlpatterns = [
     path('upcoming_event/', include('upcoming_event.urls')),
     path('forum_section/', include('forum_section.urls')),
     path('athletes/', include('athletes.urls')),
+    path('auth/', include('authentication.urls')),
 ]
