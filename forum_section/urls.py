@@ -17,4 +17,6 @@ urlpatterns = [
     path('discussion/delete/<int:id>/', delete_discussion, name='delete_discussion'),
     path('forum/edit/<int:id>/', edit_forum, name='edit_forum'),
     path('discussion/edit/<int:id>/', edit_discussion, name='edit_discussion'),
+    path('forums/json-for/', show_json_forum, name = 'jsonForum'),
+    path('forums/json-dis/', show_json_discussion, name = 'jsonDisc'),
 ]

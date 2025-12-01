@@ -9,13 +9,25 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from .models import *
 from .forms import *
 # Create your views here.
 from django.views.generic.edit import CreateView
+from django.core import serializers
 
+
+def show_json_forum(request):
+    forum_list = Forum.objects.all()
+    json_data = serializers.serialize("json", forum_list)
+    return HttpResponse(json_data, content_type="application/json")
+
+
+def show_json_discussion(request):
+    discussion_list = Discussion.objects.all()
+    json_data = serializers.serialize("json", discussion_list)
+    return HttpResponse(json_data, content_type="application/json")
 
 # @login_required(login_url="/login")
 @login_required(login_url='main:login_user')
