@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import *
 from django.contrib import admin
-
 app_name = 'forum_section'
 
 urlpatterns = [
