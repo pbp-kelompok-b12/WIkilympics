@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 import json
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -88,3 +89,10 @@ def logout(request):
             "status": False,
             "message": "Logout failed."
         }, status=401)
+
+@login_required
+def get_user_status(request):
+    return JsonResponse({
+        'is_superuser': request.user.is_superuser,
+        'username': request.user.username,
+    })
