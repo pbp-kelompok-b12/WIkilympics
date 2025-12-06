@@ -184,3 +184,21 @@ def vote_poll(request, option_id):
         "success": True,
         "total_votes": option.question.total_votes()
     })
+
+# API Polling untuk Flutter
+def polls_api(request):
+    data = []
+    for q in PollQuestion.objects.prefetch_related('options').all():
+        data.append({
+            "id": q.id,
+            "question_text": q.question_text,
+            "options": [
+                {
+                    "id": o.id,
+                    "option_text": o.option_text,
+                    "votes": o.votes,
+                }
+                for o in q.options.all()
+            ]
+        })
+    return JsonResponse(data, safe=False)
