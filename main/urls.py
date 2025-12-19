@@ -7,6 +7,4 @@ urlpatterns = [
     path('register/', register, name='register_user'),
     path('login/', login_user, name='login_user'),
     path('logout/', logout_user, name='logout'),
-    path('proxy-image/', proxy_image, name='proxy_image'),
-
 ]
