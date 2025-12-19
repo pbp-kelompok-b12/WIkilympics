@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<body class="bg-[#2B4C9F]"></body>
+
+<section class="w-full bg-[#2B4C9F] border-b border-[#fde801]">
+  
+</section>
+
+<main class="container mx-auto px-4 py-6">
+  <div class="container mx-auto  mt-32 mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-end">
+    <form method="POST" action="{% url 'forum_section:addInForum' %}" class="flex">
+      {% csrf_token %}
+      <button
+        class="w-auto px-3 py-3.5 rounded-md bg-[#fde801] hover:bg-[#bf8f00] text-[#2B4C9F] text-sm font-bold shadow-sm transition"
+        type="submit">
+        Add more
+      </button>
+    </form>
+  </div>
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {% for forum in forums %}
+      <article class="bg-[#ffffff] border-4 border-[#fde801] rounded-xl mx-15" data-forum-id="{{ forum.id }}">
+        <div class="p-5">
+          <h3 class="text-xl font-semibold m-0 truncate">{{ forum.topic }}</h3>
+          <div class="flex items-justify justify-start gap-3 mb-3">
+              
+              {% if forum.name == request.user or request.user.is_superuser %}
+              <form class="shrink-0">
+                  {% csrf_token %}
+                  <button
+                  type="button"
+                  class="delete-forum-btn px-3 py-1.5 rounded-md bg-[#dc2626] hover:bg-[#b91c1c] text-[#ffffff] text-sm font-medium shadow-sm transition whitespace"
+                  data-forum-id="{{ forum.id }}">
+                  Delete
+                  </button>
+              </form>
+              <a href="{% url 'forum_section:edit_forum' forum.id %}" class="text-[#4a90e2] hover:text-[#1c7ed6]">
+              <svg fill="#1a72aa" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                width="25" height="25" viewBox="0 0 494.936 494.936"
+                xml:space="preserve">
+              <g>
+                <g>
+                  <path d="M389.844,182.85c-6.743,0-12.21,5.467-12.21,12.21v222.968c0,23.562-19.174,42.735-42.736,42.735H67.157
+                    c-23.562,0-42.736-19.174-42.736-42.735V150.285c0-23.562,19.174-42.735,42.736-42.735h267.741c6.743,0,12.21-5.467,12.21-12.21
+                    s-5.467-12.21-12.21-12.21H67.157C30.126,83.13,0,113.255,0,150.285v267.743c0,37.029,30.126,67.155,67.157,67.155h267.741
+                    c37.03,0,67.156-30.126,67.156-67.155V195.061C402.054,188.318,396.587,182.85,389.844,182.85z"/>
+                  <path d="M483.876,20.791c-14.72-14.72-38.669-14.714-53.377,0L221.352,229.944c-0.28,0.28-3.434,3.559-4.251,5.396l-28.963,65.069
+                    c-2.057,4.619-1.056,10.027,2.521,13.6c2.337,2.336,5.461,3.576,8.639,3.576c1.675,0,3.362-0.346,4.96-1.057l65.07-28.963
+                    c1.83-0.815,5.114-3.97,5.396-4.25L483.876,74.169c7.131-7.131,11.06-16.61,11.06-26.692
+                    C494.936,37.396,491.007,27.915,483.876,20.791z M466.61,56.897L257.457,266.05c-0.035,0.036-0.055,0.078-0.089,0.107
+                    l-33.989,15.131L238.51,247.3c0.03-0.036,0.071-0.055,0.107-0.09L447.765,38.058c5.038-5.039,13.819-5.033,18.846,0.005
+                    c2.518,2.51,3.905,5.855,3.905,9.414C470.516,51.036,469.127,54.38,466.61,56.897z"/>
+                </g>
+              </g>
+              </svg>
+              </a>
+              {% endif %}
+          </div>
+
+          <div class="text-sm leading-6 text-[#334155]">
+            <p>{{ forum.description }}</p>
+          </div>
+
+          {% if forum.thumbnail %}
+          <img src="{{ forum.thumbnail }}" alt="{{ forum.topic }}" class="w-full h-full object-cover">
+        {% else %}
+          <div class="w-full h-full bg-gray-200"></div>
+        {% endif %}
+
+          <hr class="my-4 border-[#d1d5db]">
+
+          <p class="text-sm text-[#475569] mb-2">
+            By: <b class="text-[#1f2937]">{{ forum.name }}</b>
+          </p>
+
+          <span class="text-xs text-[#64748b] whitespace-nowrap">
+                  Posted on {{ forum.date_created|date:"M d, Y H:i" }}
+              </span>
+
+          <hr class="my-4 border-[#d1d5db]">
+
+          <h4 class="text-lg font-semibold mb-2">Replies from other users</h4>
+
+          <div class="text-sm space-y-1 mb-4">
+          {% for thread in discussions %}
+              {% for objs in thread %}
+              {% if objs.forum_id == forum.id %}
+                  <div class="py-1">
+                  <div class="flex items-center justify-between gap-3">
+                      <div class="flex-1">
+                      {{ objs.discuss }}
+                          <span class="text-xs text-[#64748b] whitespace-nowrap">
+                              Posted on {{ objs.date_created|date:"M d, Y H:i" }}
+                          </span>
+                      </div>
+
+                      <div class="flex items-center gap-2 shrink-0">
+                        {% if  objs.username == request.user or request.user.is_superuser %}
+                          <form method="POST" action="{% url 'forum_section:delete_discussion' objs.id %}" class="inline-block">
+                          {% csrf_token %}
+                          <button
+                              type="submit"
+                              class="px-2 py-1 rounded-md hover:text-[#000000] text-[#dc2626] text-xs font-medium shadow-sm transition">
+                              Delete
+                          </button>
+                          </form>
+                          <a href="{% url 'forum_section:edit_discussion' objs.id %}" class="text-[#4a90e2] hover:text-[#1c7ed6] text-xs inline-block">
+                            <svg fill="#1a72aa" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                              width="18" height="18" viewBox="0 0 494.936 494.936"
+                              xml:space="preserve">
+                            <g>
+                              <g>
+                                <path d="M389.844,182.85c-6.743,0-12.21,5.467-12.21,12.21v222.968c0,23.562-19.174,42.735-42.736,42.735H67.157
+                                  c-23.562,0-42.736-19.174-42.736-42.735V150.285c0-23.562,19.174-42.735,42.736-42.735h267.741c6.743,0,12.21-5.467,12.21-12.21
+                                  s-5.467-12.21-12.21-12.21H67.157C30.126,83.13,0,113.255,0,150.285v267.743c0,37.029,30.126,67.155,67.157,67.155h267.741
+                                  c37.03,0,67.156-30.126,67.156-67.155V195.061C402.054,188.318,396.587,182.85,389.844,182.85z"/>
+                                <path d="M483.876,20.791c-14.72-14.72-38.669-14.714-53.377,0L221.352,229.944c-0.28,0.28-3.434,3.559-4.251,5.396l-28.963,65.069
+                                  c-2.057,4.619-1.056,10.027,2.521,13.6c2.337,2.336,5.461,3.576,8.639,3.576c1.675,0,3.362-0.346,4.96-1.057l65.07-28.963
+                                  c1.83-0.815,5.114-3.97,5.396-4.25L483.876,74.169c7.131-7.131,11.06-16.61,11.06-26.692
+                                  C494.936,37.396,491.007,27.915,483.876,20.791z M466.61,56.897L257.457,266.05c-0.035,0.036-0.055,0.078-0.089,0.107
+                                  l-33.989,15.131L238.51,247.3c0.03-0.036,0.071-0.055,0.107-0.09L447.765,38.058c5.038-5.039,13.819-5.033,18.846,0.005
+                                  c2.518,2.51,3.905,5.855,3.905,9.414C470.516,51.036,469.127,54.38,466.61,56.897z"/>
+                              </g>
+                            </g>
+                            </svg>
+                            
+                          </a>
+                      {% endif %}
+                      <b class="italic text-[#0b1936]">| {{ objs.username.username }}</b>
+                      </div>
+                  </div>
+
+                  <hr class="my-2 border-[#d1d5db]">
+                  </div>
+              {% endif %}
+              {% endfor %}
+          {% endfor %}
+          </div>
+
+          <form method="POST" action="{% url 'forum_section:addInDiscussion' forum.id %}">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="w-[8%] min-w-[72px] px-3 py-1.5 rounded-md bg-[#fde801] hover:bg-[#bf8f00] text-[#2B4C9F] text-sm font-bold shadow-sm transition">
+              Reply
+            </button>
+          </form>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</main>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  document.querySelectorAll('.delete-forum-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const forumId = this.getAttribute('data-forum-id');
+      const csrftoken = getCookie('csrftoken');
+      
+      if (!confirm('Are you sure you want to delete this forum?')) {
+        return;
+      }
+
+      fetch(`/forum/delete/${forumId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const article = document.querySelector(`article[data-forum-id="${forumId}"]`);
+          article.style.transition = 'opacity 0.3s';
+          article.style.opacity = '0';
+          setTimeout(() => {
+            article.remove();
+          }, 300);
+        } else {
+          alert('Error deleting forum');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error connecting to server');
+      });
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+<!-- ATHLETES HIGHLIGHT SECTION -->
+<section id="athletes" class="py-16 bg-white text-center">
+  <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Athletes Highlight</h2>
+
+  {% if athletes_list %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10">
+    {% for athlete in athletes_list %}
+      <a href="{% url 'athletes:show_athlete' athlete.id %}" 
+         class="block bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
+         
+        {% if athlete.athlete_photo %}
+          <img src="{{ athlete.athlete_photo }}" 
+               alt="{{ athlete.athlete_name }}" 
+               class="rounded-t-xl h-56 w-full object-cover">
+        {% else %}
+          <div class="rounded-t-xl h-56 w-full bg-gray-200 flex items-center justify-center text-gray-500">
+            No Image
+          </div>
+        {% endif %}
+        
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-[#1E3A8A]">{{ athlete.athlete_name }}</h3>
+          <p class="text-gray-600 text-sm">{{ athlete.sport }}</p>
+          <p class="text-gray-500 text-xs mt-1">{{ athlete.country }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- Tombol ke halaman utama modul Athletes -->
+  <div class="mt-10">
+    <a href="{% url 'athletes:show_main' %}" 
+       class="bg-[#1E3A8A] text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-300">
+      Lihat Semua Athletes
+    </a>
+  </div>
+
+  {% else %}
+    <p class="text-gray-500">No athlete data available.</p>
+    <div class="mt-8">
+      <a href="{% url 'athletes:show_main' %}" 
+         class="bg-[#1E3A8A] text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-300">
+        Lihat Semua Athletes
+      </a>
+    </div>
+  {% endif %}
+</section>
+
+
+
+<!-- UPCOMING EVENTS SECTION -->
+<section id="events" class="py-16 bg-gray-50 text-center">
+  <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Upcoming Events</h2>
+
+  {% if events_list %}
+  <div class="max-w-4xl mx-auto space-y-6 px-5">
+    {% for event in events_list %}
+      <a href="{% url 'upcoming_event:daftar_event' %}" 
+         class="block bg-white rounded-xl shadow-md p-6 flex justify-between items-center hover:shadow-lg transition">
+        <div class="text-left">
+          <h3 class="text-lg font-semibold text-[#1E3A8A]">{{ event.title }}</h3>
+          <p class="text-gray-600 text-sm">{{ event.date }} • {{ event.location }}</p>
+        </div>
+        <span class="bg-[#FFD700] text-[#1E3A8A] px-4 py-1 rounded-full font-semibold text-sm">
+          {{ event.organizer }}
+        </span>
+      </a>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="text-gray-500">No events available.</p>
+  {% endif %}
+</section>
+
+
+<!-- LATEST ARTICLE SECTION -->
+<section id="news" class="py-16 bg-white text-center">
+  <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Latest Articles</h2>
+
+  {% if article_list %}
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-10">
+    {% for article in article_list %}
+      <a href="{% url 'article:article_detail' article.id %}" 
+         class="block bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition p-6 text-left">
+        <img src="{{ article.thumbnail }}" 
+             alt="{{ article.title }}" 
+             class="rounded-xl mb-4 h-48 w-full object-cover">
+        <h3 class="text-lg font-semibold text-[#1E3A8A] mb-2">{{ article.title }}</h3>
+        <p class="text-gray-600 text-sm">{{ article.summary|truncatewords:20 }}</p>
+      </a>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="text-gray-500">No article articles yet.</p>
+  {% endif %}
+</section>
+
+
+<!-- FORUM & REVIEWS SECTION -->
+<section id="forum-preview" class="bg-[#F9FAFB] py-16">
+  <div class="max-w-6xl mx-auto text-center px-6">
+    <h2 class="text-3xl font-bold text-[#1E3A8A] mb-10">Forum & Reviews</h2>
+
+    {% if forum_list %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for post in forum_list %}
+        <a href="{% url 'forum_section:home' %}" 
+           class="block bg-white rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-1 text-left overflow-hidden">
+          
+          <!-- Thumbnail -->
+          {% if post.thumbnail %}
+            <img src="{{ post.thumbnail }}" alt="{{ post.topic }}" class="w-full h-48 object-cover">
+          {% else %}
+            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+              No Image
+            </div>
+          {% endif %}
+          
+          <!-- Content -->
+          <div class="p-5">
+            <h3 class="text-lg font-semibold text-[#1E3A8A] mb-2">{{ post.topic }}</h3>
+            <p class="text-gray-600 text-sm mb-3">{{ post.description|truncatewords:20 }}</p>
+            <div class="flex items-center justify-between text-sm text-gray-500">
+              <span>👤 {{ post.name.username }}</span>
+              <span>{{ post.date_created|date:"M d, Y" }}</span>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p class="text-gray-500">No forum posts yet.</p>
+    {% endif %}
+
+    <div class="mt-10">
+      <a href="{% url 'forum_section:home' %}" 
+         class="bg-[#1E3A8A] text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-300">
+        Lihat Semua Forum
+      </a>
+    </div>
+  </div>
+</section>

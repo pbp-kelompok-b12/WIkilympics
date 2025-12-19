@@ -152,5 +152,3 @@ def delete_sport_entry_ajax(request, id):
             return JsonResponse({"status": "error", "message": "Sport not found."}, status=404)
     return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
 
-# TODO
-# Lengkapi show_sports()

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>{{ athlete.athlete_name }} - Olympic Athlete</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<!-- Hero Section -->
+<div class="relative w-full h-96">
+    {% if athlete.athlete_photo %}
+        <img src="{{ athlete.athlete_photo }}" alt="{{ athlete.athlete_name }}" class="w-full h-full object-cover">
+    {% else %}
+        <div class="w-full h-full bg-[rgb(25,50,180)] flex items-center justify-center text-white text-3xl font-bold">
+            <i class="fas fa-user-circle text-6xl mr-4"></i>
+            No Photo Available
+        </div>
+    {% endif %}
+    <div class="absolute inset-0 bg-gradient-to-b from-[rgba(10,32,61,0.85)] to-[rgba(25,50,180,0.65)] flex items-end p-6">
+        <div class="w-full">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[rgb(250,250,90)] drop-shadow-lg mb-2">
+                {{ athlete.athlete_name }}
+            </h1>
+            <div class="flex items-center space-x-4">
+                <span class="bg-[rgb(255,255,0)] text-[rgb(30,60,200)] px-3 py-1 rounded-full font-bold text-sm">
+                    {{ athlete.sport }}
+                </span>
+                <span class="text-white flex items-center">
+                    {{ athlete.country }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+
+    <!-- Back Button -->
+    <a href="{% url 'athletes:show_main' %}" 
+       class="inline-block px-4 py-2 rounded-full font-semibold text-[rgb(30,60,200)] bg-[rgb(255,255,80)] hover:bg-[rgb(250,250,90)] transition-all shadow-md transform scale-100 hover:scale-105 border-2 border-white"> 
+        ← Back to Athletes
+    </a>
+
+    <!-- Basic Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Personal Info -->
+        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow border-2 border-[rgb(40,80,200)]">
+            <h2 class="text-2xl font-bold text-[rgb(40,80,200)] mb-4">
+                Personal Information
+            </h2>
+            <ul class="space-y-3 text-gray-800">
+                <li><span class="font-semibold text-[rgb(40,80,200)]">Sport:</span> {{ athlete.sport }}</li>
+                <li><span class="font-semibold text-[rgb(40,80,200)]">Country:</span> {{ athlete.country }}</li>
+            </ul>
+        </div>
+
+        <!-- Biography -->
+        <div class="bg-[rgb(20,45,160)] text-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all border-2 border-[rgb(255,255,150)]">
+            <h2 class="text-2xl font-bold mb-4 text-[rgb(255,255,100)]">Biography</h2>
+            <p class="leading-relaxed text-justify">{{ athlete.biography|linebreaks }}</p>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

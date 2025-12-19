@@ -22,9 +22,14 @@ from django.shortcuts import redirect
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("main.urls", namespace="main")), 
-    path("upcoming-event/", include("upcoming_event.urls")),
-     path('', lambda request: redirect('upcoming_event:daftar_event'), name='home_redirect'),
+    path('', include('landingpoll.urls')),
+    path('main/', include('main.urls')),
+    path('article/', include('article.urls')),
+    path('sports/', include('sports.urls')),
+    path('upcoming-event/', include('upcoming_event.urls')),
+    path('forum_section/', include('forum_section.urls')),
+    path('athletes/', include('athletes.urls')),
+    path('auth/', include('authentication.urls')),
 ]
 
 

@@ -8,6 +8,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from article.forms import ArticleForm
 
+import requests
+
+from django.utils.html import strip_tags
+import json
+
 # Create your views here.
 def show_articles(request):
     return render(request, 'show_articles.html')
@@ -128,3 +133,43 @@ def dislike_article(request, article_id):
     else:
         article.dislike_user.add(request.user)
     return JsonResponse({'success': True})
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
+    
+@csrf_exempt
+def create_article_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        title = strip_tags(data.get("title", ""))
+        content = strip_tags(data.get("content", ""))  
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        
+        new_article = Article(
+            title=title, 
+            content=content,
+            category=category,
+            thumbnail=thumbnail,
+        )
+        new_article.save()
+        
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)    

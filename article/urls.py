@@ -1,5 +1,6 @@
 from django.urls import path
 from article.views import show_articles, show_json, show_json_id, add_article, edit_article, delete_article, like_article, dislike_article, article_detail
+from article.views import proxy_image, create_article_flutter
 
 app_name = 'article'
 
@@ -17,4 +18,6 @@ urlpatterns = [
     path('like/<uuid:article_id>/', like_article, name='like_article'),
     path('dislike/<uuid:article_id>/', dislike_article, name='dislike_article'),
 
+    path('proxy-image/', proxy_image, name='proxy_image'),
+    path('create-flutter/', create_article_flutter, name='create_news_flutter'),
 ]
