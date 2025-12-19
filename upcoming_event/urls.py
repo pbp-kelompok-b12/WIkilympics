@@ -1,4 +1,6 @@
 from django.urls import path
+from .views import proxy_image, create_event_flutter
+from django.utils.html import strip_tags
 from . import views
 
 app_name = "upcoming_event"
@@ -16,4 +18,13 @@ urlpatterns = [
 
     # Detail satu event
     path("<int:event_id>/", views.detail_event, name="detail_event"),
+
+    # json
+    path('json/', views.show_json, name='show_json'),
+
+    # tk
+    path('proxy-image/', proxy_image, name='proxy_image'),
+    path('create-flutter/', create_event_flutter, name='create_news_flutter'),
+    path('edit-flutter/<int:event_id>/', views.edit_event_flutter, name='edit_event_flutter'),
+    path('delete-flutter/<int:event_id>/', views.delete_event_flutter, name='delete_event_flutter'),
 ]
