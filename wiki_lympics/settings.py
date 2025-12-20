@@ -33,7 +33,9 @@ DEBUG = True
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "razan-muhammad-wikilympics.pbp.cs.ui.ac.id", "10.0.2.2"]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://razan-muhammad-wikilympics.pbp.cs.ui.ac.id"
+    "https://razan-muhammad-wikilympics.pbp.cs.ui.ac.id",
+    "http://localhost:*",
+    "http://127.0.0.1:*",
 ]
 
 
