@@ -4,8 +4,8 @@ from athletes.views import (
     show_main, create_athlete, show_athlete, show_json, show_json_by_id, 
     edit_athlete, delete_athlete, create_athlete_entry_ajax, 
     edit_athlete_entry_ajax, delete_athlete_entry_ajax,
-    flutter_get_athletes, flutter_create_athlete, flutter_edit_athlete,
-    flutter_delete_athlete, flutter_get_athlete_detail
+    show_json_flutter, create_athlete_flutter, 
+    edit_athlete_flutter, delete_athlete_flutter
 )
 
 app_name = 'athletes'
@@ -22,10 +22,8 @@ urlpatterns = [
     path('<uuid:id>/edit', edit_athlete, name='edit_athlete'),
     path('<uuid:id>/delete', delete_athlete, name='delete_athlete'),
     
-    # Endpoints khusus untuk Flutter
-    path('flutter/', flutter_get_athletes, name='flutter_get_athletes'),
-    path('flutter/create/', flutter_create_athlete, name='flutter_create_athlete'),
-    path('flutter/<uuid:id>/edit/', flutter_edit_athlete, name='flutter_edit_athlete'),
-    path('flutter/<uuid:id>/delete/', flutter_delete_athlete, name='flutter_delete_athlete'),
-    path('flutter/<uuid:id>/', flutter_get_athlete_detail, name='flutter_get_athlete_detail'),
+    path('flutter/', show_json_flutter, name='show_json_flutter'),
+    path('flutter/create/', create_athlete_flutter, name='create_athlete_flutter'),
+    path('flutter/<uuid:id>/edit/', edit_athlete_flutter, name='edit_athlete_flutter'),
+    path('flutter/<uuid:id>/delete/', delete_athlete_flutter, name='delete_athlete_flutter'),
 ]

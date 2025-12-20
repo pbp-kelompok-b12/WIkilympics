@@ -16,7 +16,7 @@ function showConfirmToast(message, onConfirm) {
     <p class="text-gray-800">${message}</p>
     <div class="flex justify-end gap-2">
     <button id="confirm-yes" class="bg-red-600 text-white px-3 py-1 rounded">Yes</button>
-    <button id="confirm-no" class="bg-gray-300 px-3 py-1 rounded">Cancel</button>
+    <button id="confirm-no" class="bg-gray-300 text-black px-3 py-1 rounded">Cancel</button>
     </div>
   `;
   document.body.appendChild(toast);
