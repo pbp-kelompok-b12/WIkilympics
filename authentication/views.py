@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
@@ -75,6 +74,7 @@ def register(request):
         }, status=400)
 
 @csrf_exempt
+@login_required
 def logout(request):
     username = request.user.username
     try:
@@ -96,3 +96,43 @@ def get_user_status(request):
         'is_superuser': request.user.is_superuser,
         'username': request.user.username,
     }) 
+
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import logout as auth_logout
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.hashers import check_password
+
+@csrf_exempt
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        new_password = request.POST.get('password')
+
+        if new_password:
+            if check_password(new_password, user.password):
+                return JsonResponse({
+                    "status": "error", 
+                    "message": "New password cannot be the same as the old one!"
+                }, status=400)
+            
+            user.set_password(new_password)
+            user.save()
+
+            update_session_auth_hash(request, user) 
+            
+            return JsonResponse({
+                "status": "success", 
+                "message": "Password updated! You are still logged in."
+            })
+        
+        return JsonResponse({"status": "error", "message": "Password cannot be empty"}, status=400)
+
+@csrf_exempt
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        return JsonResponse({"status": "success", "message": "Account deleted successfully."})
