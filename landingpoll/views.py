@@ -170,13 +170,13 @@ def delete_poll(request, poll_id):
         poll = get_object_or_404(PollQuestion, pk=poll_id)
         poll.delete()
 
-        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.method == "POST":
             return JsonResponse({"status": "success", "message": "Polling berhasil dihapus!"})
 
         messages.success(request, "Polling berhasil dihapus!")
         return redirect("landingpoll:landing_page")
 
-    return JsonResponse({"status": "error", "message": "Tidak punya izin menghapus."}, status=403)
+    return JsonResponse({"status": "error", "message": "Tidak punya izin."}, status=403)
 
 # Vote polling (User)
 def vote_poll(request, option_id):
