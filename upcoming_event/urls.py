@@ -25,6 +25,6 @@ urlpatterns = [
     # tk
     path('proxy-image/', proxy_image, name='proxy_image'),
     path('create-flutter/', create_event_flutter, name='create_news_flutter'),
-    path('edit-flutter/<int:event_id>/', views.edit_event_flutter, name='edit_event_flutter'),
+    path('edit--event-flutter/<int:event_id>/', views.edit_event_flutter, name='edit_event_flutter'),
     path('delete-flutter/<int:event_id>/', views.delete_event_flutter, name='delete_event_flutter'),
 ]
