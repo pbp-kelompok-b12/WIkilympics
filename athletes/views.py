@@ -7,6 +7,7 @@ from athletes.models import Athletes
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+import json
 
 def show_main(request):
     athletes_list = Athletes.objects.all()
@@ -129,3 +130,165 @@ def delete_athlete_entry_ajax(request, id):
         except Athletes.DoesNotExist:
             return JsonResponse({"status": "error", "message": "Athlete not found."}, status=404)
     return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
+
+# ============ FUNGSI FLUTTER ============
+@csrf_exempt
+@login_required(login_url='/authentication/login/')
+def flutter_get_athletes(request):
+    try:
+        athletes = Athletes.objects.all()
+        
+        sport_filter = request.GET.get('sport', '')
+        country_filter = request.GET.get('country', '')
+        search_query = request.GET.get('q', '')
+        
+        if sport_filter:
+            athletes = athletes.filter(sport=sport_filter)
+        if country_filter:
+            athletes = athletes.filter(country__icontains=country_filter)
+        if search_query:
+            athletes = athletes.filter(athlete_name__icontains=search_query)
+        
+        athletes_data = []
+        for athlete in athletes:
+            athletes_data.append({
+                'pk': str(athlete.id),
+                'fields': {
+                    'athlete_name': athlete.athlete_name,
+                    'country': athlete.country,
+                    'sport': athlete.sport,
+                    'biography': athlete.biography,
+                    'athlete_photo': athlete.athlete_photo or '',
+                }
+            })
+        
+        return JsonResponse(athletes_data, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
+@login_required(login_url='/authentication/login/')
+def flutter_create_athlete(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            required_fields = ['athlete_name', 'country', 'sport', 'biography']
+            for field in required_fields:
+                if field not in data or not data[field]:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': f'Field {field} is required.'
+                    }, status=400)
+            
+            new_athlete = Athletes(
+                athlete_name=data['athlete_name'],
+                country=data['country'],
+                sport=data['sport'],
+                biography=data['biography'],
+                athlete_photo=data.get('athlete_photo', '')
+            )
+            new_athlete.save()
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Athlete added successfully!',
+                'athlete_id': str(new_athlete.id)
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Invalid JSON format'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
+
+@csrf_exempt
+@login_required(login_url='/authentication/login/')
+def flutter_edit_athlete(request, id):
+    try:
+        athlete = Athletes.objects.get(pk=id)
+    except Athletes.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Athlete not found'}, status=404)
+    
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            required_fields = ['athlete_name', 'country', 'sport', 'biography']
+            for field in required_fields:
+                if field not in data:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': f'Field {field} is required.'
+                    }, status=400)
+            
+            athlete.athlete_name = data['athlete_name']
+            athlete.country = data['country']
+            athlete.sport = data['sport']
+            athlete.biography = data['biography']
+            athlete.athlete_photo = data.get('athlete_photo', athlete.athlete_photo)
+            athlete.save()
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Athlete updated successfully!'
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Invalid JSON format'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
+
+@csrf_exempt
+@login_required(login_url='/authentication/login/')
+def flutter_delete_athlete(request, id):
+    try:
+        athlete = Athletes.objects.get(pk=id)
+    except Athletes.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Athlete not found'}, status=404)
+    
+    if request.method == 'POST':
+        try:
+            athlete.delete()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Athlete deleted successfully!'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
+
+@csrf_exempt
+@login_required(login_url='/authentication/login/')
+def flutter_get_athlete_detail(request, id):
+    try:
+        athlete = Athletes.objects.get(pk=id)
+        
+        data = {
+            'pk': str(athlete.id),
+            'fields': {
+                'athlete_name': athlete.athlete_name,
+                'country': athlete.country,
+                'sport': athlete.sport,
+                'biography': athlete.biography,
+                'athlete_photo': athlete.athlete_photo or '',
+            }
+        }
+        
+        return JsonResponse(data)
+    except Athletes.DoesNotExist:
+        return JsonResponse({'error': 'Athlete not found'}, status=404)

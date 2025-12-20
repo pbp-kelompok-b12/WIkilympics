@@ -5,3 +5,5 @@ psycopg2-binary
 requests
 urllib3
 python-dotenv
+Django>=4.0
+django-cors-headers>=4.0

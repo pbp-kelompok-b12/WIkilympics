@@ -1,5 +1,12 @@
+# athletes/urls.py
 from django.urls import path
-from athletes.views import show_main, create_athlete, show_athlete, show_json, show_json_by_id, edit_athlete, delete_athlete, create_athlete_entry_ajax, edit_athlete_entry_ajax, delete_athlete_entry_ajax
+from athletes.views import (
+    show_main, create_athlete, show_athlete, show_json, show_json_by_id, 
+    edit_athlete, delete_athlete, create_athlete_entry_ajax, 
+    edit_athlete_entry_ajax, delete_athlete_entry_ajax,
+    flutter_get_athletes, flutter_create_athlete, flutter_edit_athlete,
+    flutter_delete_athlete, flutter_get_athlete_detail
+)
 
 app_name = 'athletes'
 
@@ -14,4 +21,11 @@ urlpatterns = [
     path('<uuid:id>/', show_athlete, name='show_athlete'),
     path('<uuid:id>/edit', edit_athlete, name='edit_athlete'),
     path('<uuid:id>/delete', delete_athlete, name='delete_athlete'),
+    
+    # Endpoints khusus untuk Flutter
+    path('flutter/', flutter_get_athletes, name='flutter_get_athletes'),
+    path('flutter/create/', flutter_create_athlete, name='flutter_create_athlete'),
+    path('flutter/<uuid:id>/edit/', flutter_edit_athlete, name='flutter_edit_athlete'),
+    path('flutter/<uuid:id>/delete/', flutter_delete_athlete, name='flutter_delete_athlete'),
+    path('flutter/<uuid:id>/', flutter_get_athlete_detail, name='flutter_get_athlete_detail'),
 ]
