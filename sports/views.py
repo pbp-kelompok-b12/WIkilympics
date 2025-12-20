@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 import requests
 from django.utils.html import strip_tags
 import json
+from .models import Sports 
 
 def show_main(request):
     sports_list = Sports.objects.all()
@@ -173,18 +174,11 @@ def proxy_image(request):
     except requests.RequestException as e:
         return HttpResponse(f'Error fetching image: {str(e)}', status=500)
 
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.html import strip_tags
-from .models import Sports # Ganti 'Sports' jika nama class model kamu berbeda
-
 @csrf_exempt
 def create_sport_flutter(request):
     if request.method == 'POST':
         data = json.loads(request.body)
 
-        # 1. Ambil & Bersihkan Data String (Strip Tags untuk keamanan XSS)
         sport_name = strip_tags(data.get("sport_name", ""))
         sport_img = strip_tags(data.get("sport_img", ""))
         sport_description = strip_tags(data.get("sport_description", ""))
@@ -192,19 +186,14 @@ def create_sport_flutter(request):
         country_flag_img = strip_tags(data.get("country_flag_img", ""))
         history_description = strip_tags(data.get("history_description", ""))
         equipment = strip_tags(data.get("equipment", ""))
-        
-        # 2. Ambil Data Enum/Choice (Langsung string karena Flutter kirim string)
         participation_structure = data.get("participation_structure", "team")
         sport_type = data.get("sport_type", "ball_sport")
 
-        # 3. Ambil Data Integer
         try:
             first_year_played = int(data.get("first_year_played", 0))
         except ValueError:
             first_year_played = 0
 
-        # 4. Buat Object Baru
-        # Catatan: Jika model kamu butuh 'user', tambahkan: user=request.user
         new_sport = Sports(
             sport_name=sport_name,
             sport_img=sport_img,
@@ -269,10 +258,7 @@ def edit_sport_flutter(request, id):
 def delete_sport_flutter(request, id):
     if request.method == 'POST':
         try:
-            # Cari sport berdasarkan UUID (pk)
             sport = Sports.objects.get(pk=id)
-            
-            # Hapus data
             sport.delete()
 
             return JsonResponse({"status": "success"}, status=200)
