@@ -95,4 +95,4 @@ def get_user_status(request):
     return JsonResponse({
         'is_superuser': request.user.is_superuser,
         'username': request.user.username,
-    })
+    }) 

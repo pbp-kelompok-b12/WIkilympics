@@ -12,15 +12,33 @@ import requests
 
 from django.utils.html import strip_tags
 import json
+import re
 
 # Create your views here.
 def show_articles(request):
     return render(request, 'show_articles.html')
 
+def normalize_string(text):
+    text = text.lower().replace('_', ' ')
+    return re.sub(r'\s+', ' ', text).strip()
+
 def show_json(request):
     article_list = Article.objects.all().order_by('-created')
+    all_sports = Sports.objects.all()
+
     data = []
     for article in article_list:
+        clean_article_category = normalize_string(article.category)
+
+        sport_id = None
+        sport_obj = Sports.objects.filter(sport_name__iexact=clean_article_category).first()
+        
+        if sport_obj is not None:
+            sport_id = str(sport_obj.pk)
+        else:
+            sport_id=None
+        # sport_id = str(sport_obj.pk)
+
         is_liked = False
         is_disliked = False
         if request.user.is_authenticated:
@@ -32,9 +50,10 @@ def show_json(request):
             'title': article.title,
             'content': article.content,
             'category': article.category,
+            'sport_id': sport_id,
             'created': article.created.isoformat(),
             'thumbnail': article.thumbnail,
-            'likes': article.like_count,
+            'likes': article.like_user.count(),
           
             'is_liked': is_liked,
             'is_disliked': is_disliked,
@@ -50,7 +69,7 @@ def show_json_id(request, article_id) :
         'category': article.category,
         'created': article.created.isoformat(),
         'thumbnail': article.thumbnail,
-        'likes': article.like_count,
+        'likes': article.like_user.count(),
     }
     return JsonResponse(data)
 
@@ -103,6 +122,7 @@ def article_detail(request, id):
     return render(request, "article_detail.html", context)
 
 # @login_required(login_url='main:login_user')
+@csrf_exempt
 def like_article(request, article_id):
     if not request.user.is_authenticated:
         return JsonResponse ({'success': False}, status=403)
@@ -119,6 +139,7 @@ def like_article(request, article_id):
     return JsonResponse({'success': True, 'likes': article.like_user.count()})
 
 # @login_required(login_url='main:login_user')
+@csrf_exempt
 def dislike_article(request, article_id):
     if not request.user.is_authenticated:
         return JsonResponse ({'success': False}, status=403)
@@ -132,7 +153,7 @@ def dislike_article(request, article_id):
         article.dislike_user.add(request.user)
     else:
         article.dislike_user.add(request.user)
-    return JsonResponse({'success': True})
+    return JsonResponse({'success': True, 'likes': article.like_user.count()})
 
 def proxy_image(request):
     image_url = request.GET.get('url')
@@ -172,4 +193,32 @@ def create_article_flutter(request):
         
         return JsonResponse({"status": "success"}, status=200)
     else:
-        return JsonResponse({"status": "error"}, status=401)    
+        return JsonResponse({"status": "error"}, status=401)  
+
+@csrf_exempt
+def edit_article_flutter(request, id):
+    if request.method == 'POST':
+        article = Article.objects.get(pk=id)
+        
+        data = json.loads(request.body)
+
+        article.title = strip_tags(data.get("title", article.title))
+        article.content = strip_tags(data.get("content", article.content))
+        article.category = data.get("category", article.category)
+        article.thumbnail = data.get("thumbnail", article.thumbnail)
+
+        article.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status:error"}, status=401)
+
+@csrf_exempt
+def delete_article_flutter(request, id):
+    if request.method == 'POST':
+        article = Article.objects.get(pk=id)
+        article.delete()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=400)
