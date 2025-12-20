@@ -87,10 +87,6 @@ def get_event_json(request, id):
         return JsonResponse({'error': 'Event not found'}, status=404)
 
 
-# ==========================
-# CREATE / UPDATE / DELETE (ADMIN ONLY)
-# ==========================
-
 @login_required(login_url='/login/')
 @user_passes_test(is_superuser)
 def add_event(request):
