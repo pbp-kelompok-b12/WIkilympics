@@ -207,11 +207,15 @@ def edit_forum_json(request, pk):
             user_id = None
             is_superuser = False
             
-            try:
-                user_id = int(request.POST.get('user_id'))
-                is_superuser = request.POST.get('is_superuser', 'false').lower() == 'true'
-            except (TypeError, ValueError):
-                pass
+            if request.user.is_authenticated:
+                user_id = request.user.id
+                is_superuser = request.user.is_superuser
+            else:
+                try:
+                    user_id = int(request.POST.get('user_id'))
+                    is_superuser = request.POST.get('is_superuser', 'false').lower() == 'true'
+                except (TypeError, ValueError):
+                    pass
             if user_id is None and request.user.is_authenticated:
                 user_id = request.user.id
                 is_superuser = request.user.is_superuser
@@ -286,7 +290,7 @@ def delete_forum_json(request, pk):
                     "message": "Not authenticated"
                 }, status=401)
            
-            can_delete = (forum.name == user_id) or is_superuser
+            can_delete = (forum.name.id == user_id) or is_superuser
             
             if not can_delete:
                 return JsonResponse({
